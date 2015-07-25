@@ -5,7 +5,7 @@
 
 namespace winapi
 {
-	inline HMODULE load_library( boost::wstring_ref path ) noexcept
+	inline HMODULE load_library( boost::wstring_ref path ) 
 	{
 		return LoadLibraryW( path.data() );
 	}

@@ -1,18 +1,17 @@
 #include <mmaccel/platform.hpp>
 #include <mmaccel/winapi/module.hpp>
 #include <mmaccel/winapi/directory.hpp>
+#include <mmaccel/mmaccel.hpp>
 
 IDirect3D9* create_d3d( UINT version ) noexcept
 {
 	HMODULE mod = winapi::load_library( winapi::get_system_directory() + L"\\d3d9.dll" );
 	if( !mod ) {
-		OutputDebugStringW( L"GetProcAddress Failed\n" );
 		return nullptr;
 	}
 
 	auto const f = winapi::get_proc_address< decltype( &Direct3DCreate9 ) >( mod, "Direct3DCreate9" );
 	if( !f ) {
-		OutputDebugStringW( L"GetProcAddress Failed\n" );
 		return nullptr;
 	}
 
@@ -34,12 +33,24 @@ HRESULT create_d3d_ex( UINT version, IDirect3D9Ex** obj )
 	return f( version, obj );
 }
 
-inline void load_mme() 
+void load_mme() 
 {
-	HMODULE mod = winapi::load_library( winapi::get_module_path() + L"\\MMHack.dll" );
+	winapi::load_library( winapi::get_module_path() + L"\\MMHack.dll" );
+}
+
+void load_mmaccel()
+{
+	HMODULE mod = winapi::load_library( winapi::get_module_path() + L"\\mmaccel.dll" );
 	if( !mod ) {
-		OutputDebugStringW( L"cannot load MMHack.dll\n" );
+		return;
 	}
+
+	auto const f = winapi::get_proc_address< decltype( &start_mmaccel ) >( mod, "start_mmaccel" );
+	if( !f ) {
+		return;
+	}
+
+	f();
 }
 
 extern "C"
@@ -57,6 +68,7 @@ extern "C"
 	BOOL APIENTRY DllMain( HINSTANCE, DWORD reason, LPVOID )
 	{
 		if( reason == DLL_PROCESS_ATTACH ) {
+			load_mmaccel();
 			load_mme();
 		}
 

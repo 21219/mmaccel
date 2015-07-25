@@ -3,6 +3,7 @@
 #include <string>
 #include <array>
 #include "../platform.hpp"
+#include "handle.hpp"
 
 namespace winapi
 {
@@ -42,5 +43,24 @@ namespace winapi
 
 		return{ &tmp[0] };
 	}
+
+	class directory_handle
+	{
+		unique_handle handle_;
+
+	public:
+		directory_handle() = default;
+		directory_handle( directory_handle&& ) = default;
+		directory_handle& operator=( directory_handle&& ) = default;
+
+		directory_handle(boost::wstring_ref path, DWORD share, DWORD disposition, DWORD attr, SECURITY_ATTRIBUTES* sa = nullptr) :
+			handle_( CreateFileW( path.data(), FILE_LIST_DIRECTORY, share, sa, disposition, attr, nullptr ) )
+		{ }
+
+		HANDLE get() const noexcept
+		{
+			return handle_.get();
+		}
+	};
 
 } // namespace winapi

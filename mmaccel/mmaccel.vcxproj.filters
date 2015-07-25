@@ -8,10 +8,28 @@
     <ClInclude Include="winapi\module.hpp">
       <Filter>winapi</Filter>
     </ClInclude>
+    <ClInclude Include="mmaccel.hpp" />
+    <ClInclude Include="file_monitor.hpp" />
+    <ClInclude Include="winapi\handle.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\event.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\overlapped.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\file_notify.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">
       <UniqueIdentifier>{a405125b-2503-4aa0-978f-a7259a6eee9a}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mmaccel.cpp" />
+    <ClCompile Include="file_monitor.cpp" />
   </ItemGroup>
 </Project>
