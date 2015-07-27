@@ -103,7 +103,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -121,7 +121,7 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,7 +142,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -164,23 +164,35 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="file_monitor.hpp" />
+    <ClInclude Include="gui\menu.hpp" />
+    <ClInclude Include="gui\message_handler.hpp" />
     <ClInclude Include="mmaccel.hpp" />
     <ClInclude Include="platform.hpp" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="utility\type_tuple.hpp" />
+    <ClInclude Include="winapi\control.hpp" />
     <ClInclude Include="winapi\directory.hpp" />
     <ClInclude Include="winapi\event.hpp" />
     <ClInclude Include="winapi\file_notify.hpp" />
     <ClInclude Include="winapi\handle.hpp" />
+    <ClInclude Include="winapi\hook.hpp" />
+    <ClInclude Include="winapi\menu.hpp" />
     <ClInclude Include="winapi\module.hpp" />
     <ClInclude Include="winapi\overlapped.hpp" />
+    <ClInclude Include="winapi\process.hpp" />
+    <ClInclude Include="winapi\window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="file_monitor.cpp" />
     <ClCompile Include="mmaccel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

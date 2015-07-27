@@ -22,14 +22,48 @@
     <ClInclude Include="winapi\file_notify.hpp">
       <Filter>winapi</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="winapi\window.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\process.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\control.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\menu.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\menu.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\hook.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\message_handler.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\type_tuple.hpp">
+      <Filter>utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">
       <UniqueIdentifier>{a405125b-2503-4aa0-978f-a7259a6eee9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{dae4d730-d9ad-43f9-ae64-735d6e07db6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utility">
+      <UniqueIdentifier>{18bb31b0-7465-4733-8d9d-fe9e47aaf884}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mmaccel.cpp" />
     <ClCompile Include="file_monitor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
 </Project>

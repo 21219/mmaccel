@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <d3d9.h>
+#include "resource.h"
 
 #undef near
 #undef far

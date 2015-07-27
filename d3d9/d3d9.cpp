@@ -40,7 +40,7 @@ void load_mme()
 
 void load_mmaccel()
 {
-	HMODULE mod = winapi::load_library( winapi::get_module_path() + L"\\mmaccel.dll" );
+	HMODULE mod = winapi::load_library( winapi::get_module_path() + L"\\mmaccel\\mmaccel.dll" );
 	if( !mod ) {
 		return;
 	}
@@ -57,6 +57,8 @@ extern "C"
 {
 	IDirect3D9* WINAPI proxy_Direct3DCreate9( UINT version )
 	{
+		load_mmaccel();
+
 		return create_d3d( version );
 	}
 
@@ -68,7 +70,6 @@ extern "C"
 	BOOL APIENTRY DllMain( HINSTANCE, DWORD reason, LPVOID )
 	{
 		if( reason == DLL_PROCESS_ATTACH ) {
-			load_mmaccel();
 			load_mme();
 		}
 
