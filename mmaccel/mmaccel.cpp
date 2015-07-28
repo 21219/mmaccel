@@ -2,6 +2,8 @@
 #include "winapi/window.hpp"
 #include "winapi/hook.hpp"
 #include "winapi/thread.hpp"
+#include "winapi/message_box.hpp"
+#include "winapi/string.hpp"
 #include "gui/menu.hpp"
 #include "gui/version.hpp"
 #include <sstream>
@@ -29,8 +31,10 @@ namespace mmaccel
 				return Func( code, wparam, lparam );
 			}
 			catch( std::exception const& e ) {
+				winapi::message_box( L"MMAccel", winapi::multibyte_to_widechar( e.what(), CP_OEMCP ), MB_OK | MB_ICONERROR );
 			}
 			catch( ... ) {
+				winapi::message_box( L"MMaccel", L"unknown error", MB_OK | MB_ICONERROR );
 			}
 
 			return CallNextHookEx( nullptr, code, wparam, lparam );

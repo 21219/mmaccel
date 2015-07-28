@@ -56,6 +56,12 @@
     <ClInclude Include="winapi\dialog.hpp">
       <Filter>winapi</Filter>
     </ClInclude>
+    <ClInclude Include="winapi\message_box.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\string.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">

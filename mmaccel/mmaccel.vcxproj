@@ -184,9 +184,11 @@
     <ClInclude Include="winapi\handle.hpp" />
     <ClInclude Include="winapi\hook.hpp" />
     <ClInclude Include="winapi\menu.hpp" />
+    <ClInclude Include="winapi\message_box.hpp" />
     <ClInclude Include="winapi\module.hpp" />
     <ClInclude Include="winapi\overlapped.hpp" />
     <ClInclude Include="winapi\process.hpp" />
+    <ClInclude Include="winapi\string.hpp" />
     <ClInclude Include="winapi\thread.hpp" />
     <ClInclude Include="winapi\window.hpp" />
   </ItemGroup>
