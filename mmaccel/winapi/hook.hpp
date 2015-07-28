@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../platform.hpp"
+#include "thread.hpp"
 #include <memory>
 
 namespace winapi
@@ -25,9 +26,9 @@ namespace winapi
 		get_message = WH_GETMESSAGE,
 	};
 
-	inline hook_handle set_windows_hook_ex( hook_type id, HOOKPROC proc, HINSTANCE hinst, DWORD th_id ) noexcept
+	inline hook_handle set_windows_hook_ex( hook_type id, HOOKPROC proc, HINSTANCE hinst, thread_id const& th_id ) noexcept
 	{
-		return hook_handle( SetWindowsHookExW( static_cast< int >( id ), proc, hinst, th_id ) );
+		return hook_handle( SetWindowsHookExW( static_cast< int >( id ), proc, hinst, th_id.get() ) );
 	}
 
 } // namespace winapi

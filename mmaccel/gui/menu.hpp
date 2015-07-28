@@ -35,8 +35,18 @@ namespace mmaccel
 			DrawMenuBar( hwnd );
 		}
 
+		template <typename Message, typename F>
+		void assign_handler(Message, F&& f)
+		{
+			mh_.assign( Message(), std::forward< F >( f ) );
+		}
+
 		void on_command( WPARAM wparam )
 		{
+			if( !root_ ) {
+				return;
+			}
+
 			if( HIWORD( wparam ) != 0 ) {
 				return;
 			}

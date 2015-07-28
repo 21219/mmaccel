@@ -45,12 +45,18 @@ void load_mmaccel()
 		return;
 	}
 
-	auto const f = winapi::get_proc_address< decltype( &start_mmaccel ) >( mod, "start_mmaccel" );
-	if( !f ) {
+	auto const hooks = winapi::get_proc_address< decltype( &mmaccel_register_hooks ) >( mod, "mmaccel_register_hooks" );
+	if( !hooks ) {
 		return;
 	}
 
-	f();
+	auto const start = winapi::get_proc_address< decltype( &mmaccel_start) >( mod, "mmaccel_start" );
+	if( !start ) {
+		return;
+	}
+
+	hooks();
+	start();
 }
 
 extern "C"

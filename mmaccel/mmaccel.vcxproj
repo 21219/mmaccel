@@ -171,11 +171,13 @@
     <ClInclude Include="file_monitor.hpp" />
     <ClInclude Include="gui\menu.hpp" />
     <ClInclude Include="gui\message_handler.hpp" />
+    <ClInclude Include="gui\version.hpp" />
     <ClInclude Include="mmaccel.hpp" />
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="utility\type_tuple.hpp" />
     <ClInclude Include="winapi\control.hpp" />
+    <ClInclude Include="winapi\dialog.hpp" />
     <ClInclude Include="winapi\directory.hpp" />
     <ClInclude Include="winapi\event.hpp" />
     <ClInclude Include="winapi\file_notify.hpp" />
@@ -185,6 +187,7 @@
     <ClInclude Include="winapi\module.hpp" />
     <ClInclude Include="winapi\overlapped.hpp" />
     <ClInclude Include="winapi\process.hpp" />
+    <ClInclude Include="winapi\thread.hpp" />
     <ClInclude Include="winapi\window.hpp" />
   </ItemGroup>
   <ItemGroup>

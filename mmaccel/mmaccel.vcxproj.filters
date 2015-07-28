@@ -47,6 +47,15 @@
     <ClInclude Include="utility\type_tuple.hpp">
       <Filter>utility</Filter>
     </ClInclude>
+    <ClInclude Include="winapi\thread.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\version.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\dialog.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">
