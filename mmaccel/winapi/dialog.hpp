@@ -11,4 +11,9 @@ namespace winapi
 		DialogBoxW( get_module_handle( path ), MAKEINTRESOURCEW( id.get() ), parent, proc );
 	}
 
+	inline HWND modeless_dialog_box( boost::wstring_ref path, control_id const& id, HWND parent, DLGPROC proc ) noexcept
+	{
+		return CreateDialogW( get_module_handle( path ), MAKEINTRESOURCEW( id.get() ), parent, proc );
+	}
+
 } // namespace winapi
