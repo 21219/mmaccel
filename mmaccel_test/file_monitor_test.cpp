@@ -17,7 +17,7 @@ namespace mmaccel
 			file_monitor fm;
 			std::atomic< bool > flg = false;
 
-			fm.start( winapi::get_module_path(), [&flg]( boost::wstring_ref name ) { 
+			fm.start( winapi::get_module_path(), [&flg]( boost::wstring_ref ) { 
 				flg = true;
 				return true;
 			} );
