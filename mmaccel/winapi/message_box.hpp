@@ -9,7 +9,7 @@ namespace winapi
 {
 	inline int message_box(boost::wstring_ref caption, boost::wstring_ref str, DWORD flag) noexcept
 	{
-		return MessageBoxW( nullptr, caption.data(), str.data(), flag );
+		return MessageBoxW( nullptr, str.data(), caption.data(), flag );
 	}
 
 	inline void last_error_message_box( boost::wstring_ref caption, boost::wstring_ref str ) 

@@ -80,6 +80,7 @@ namespace mmaccel
 			mmd_ = winapi::get_window_from_process_id( winapi::get_current_process_id() );
 			menu_ = menu( mmd_ );
 
+			menu_.assign_handler( menu_command< ID_MMACCEL_SETTING >(), [this] { this->run_key_config(); } );
 			menu_.assign_handler( menu_command< ID_MMACCEL_VERSION >(), [this] { version_dialog::show( this->mmd_ ); } );
 		}
 
@@ -108,6 +109,22 @@ namespace mmaccel
 			instance().get_message_proc( msg );
 
 			return CallNextHookEx( nullptr, code, wparam, lparam );
+		}
+
+		void run_key_config()
+		{
+			PROCESS_INFORMATION pi;
+			STARTUPINFOW si;
+
+			ZeroMemory( &si, sizeof( si ) );
+			si.cb = sizeof( STARTUPINFOW );
+
+			if( !CreateProcessW( L"mmaccel\\key_config.exe", nullptr, nullptr, nullptr, FALSE, NORMAL_PRIORITY_CLASS, nullptr, nullptr, &si, &pi ) ) {
+				return;
+			}
+
+			CloseHandle( pi.hThread );
+			CloseHandle( pi.hProcess );
 		}
 	};
 
