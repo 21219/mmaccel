@@ -9,14 +9,14 @@ namespace winapi
 {
 	inline std::wstring multibyte_to_widechar(boost::string_ref src, int code)
 	{
-		auto const sz = MultiByteToWideChar( code, 0, src.data(), src.size(), nullptr, 0 );
+		auto const sz = MultiByteToWideChar( code, 0, src.data(), static_cast< int >( src.size() ), nullptr, 0 );
 		if( !sz ) {
 			return{};
 		}
 
 		std::wstring dst;
 		dst.resize( sz );
-		auto const result = MultiByteToWideChar( code, 0, src.data(), src.size(), &dst[0], dst.size() );
+		auto const result = MultiByteToWideChar( code, 0, src.data(), static_cast< int >( src.size() ), &dst[0], static_cast< int >( dst.size() ) );
 		if( !result ) {
 			return{};
 		}

@@ -19,7 +19,9 @@ namespace winapi
 
 	inline bool read_directory_change(directory_handle const& dir, file_notify_information_buffer& fnib, bool subtree, DWORD filter, overlapped_t& ol) noexcept
 	{
-		return static_cast< BOOL >( ReadDirectoryChangesW( dir.get(), &fnib.buf[0], static_cast< DWORD >( fnib.buf.size() ), subtree, filter, nullptr, &ol.obj, nullptr ) );
+		return ReadDirectoryChangesW( 
+			dir.get(), &fnib.buf[0], static_cast< DWORD >( fnib.buf.size() ), static_cast< BOOL >( subtree ), filter, nullptr, &ol.obj, nullptr
+		) != 0;
 	}
 
 	template <typename F>
