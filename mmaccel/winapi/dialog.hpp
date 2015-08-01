@@ -16,4 +16,9 @@ namespace winapi
 		return CreateDialogW( get_module_handle( path ), MAKEINTRESOURCEW( id.get() ), parent, proc );
 	}
 
+	inline HWND modeless_dialog_box( control_id const& id, HWND parent, DLGPROC proc ) noexcept
+	{
+		return CreateDialogW( get_module_handle(), MAKEINTRESOURCEW( id.get() ), parent, proc );
+	}
+
 } // namespace winapi

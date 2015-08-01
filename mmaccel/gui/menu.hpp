@@ -14,23 +14,20 @@ namespace mmaccel
 		static constexpr auto id = ControlID;
 	};
 
+	template <DWORD ID, DWORD... SubItems>
 	class menu
 	{
 		winapi::loaded_menu_handle root_;
-		message_handler<
-			menu_command< ID_MMACCEL_SETTING >,
-			menu_command< ID_MMACCEL_ERROR_LOG >,
-			menu_command< ID_MMACCEL_VERSION >
-		> mh_;
+		message_handler< menu_command< SubItems >... > mh_;
 
 	public:
 		menu() = default;
 
-		menu( HWND hwnd ) :
-			root_( winapi::load_menu( winapi::get_module_path() + L"\\mmaccel\\mmaccel.dll", IDR_MMACCEL_MENU ) )
+		menu( HWND hwnd, boost::wstring_ref path, boost::wstring_ref root_name ) :
+			root_( winapi::load_menu( path, ID ) )
 		{
-			auto const mmd_menu = winapi::get_menu( hwnd );
-			winapi::insert_menu( mmd_menu, winapi::get_menu_item_count( mmd_menu ), winapi::get_sub_menu( root_, 0 ), L"MMAccel" );
+			auto const src = winapi::get_menu( hwnd );
+			winapi::insert_menu( src, winapi::get_menu_item_count( src ), winapi::get_sub_menu( root_, 0 ), root_name.data() );
 
 			DrawMenuBar( hwnd );
 		}

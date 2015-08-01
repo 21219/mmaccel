@@ -44,7 +44,12 @@ namespace mmaccel
 	class module_impl
 	{
 		HWND mmd_;
-		menu menu_;
+
+		menu< 
+			IDR_MMACCEL_MENU, 
+			ID_MMACCEL_SETTING, ID_MMACCEL_ERROR_LOG, ID_MMACCEL_VERSION
+		> menu_;
+
 		winapi::hook_handle hook_cwp_;
 		winapi::hook_handle hook_gm_;
 
@@ -78,7 +83,7 @@ namespace mmaccel
 		void start()
 		{
 			mmd_ = winapi::get_window_from_process_id( winapi::get_current_process_id() );
-			menu_ = menu( mmd_ );
+			menu_ = decltype( menu_ )( mmd_, winapi::get_module_path() + L"\\mmaccel\\mmaccel.dll", L"MMAccel" );
 
 			menu_.assign_handler( menu_command< ID_MMACCEL_SETTING >(), [this] { this->run_key_config(); } );
 			menu_.assign_handler( menu_command< ID_MMACCEL_VERSION >(), [this] { version_dialog::show( this->mmd_ ); } );
