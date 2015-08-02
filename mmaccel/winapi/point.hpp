@@ -69,9 +69,13 @@ namespace winapi
 			pt_{ x, y }
 		{}
 
-		point_t(POINT const& pt) :
-			pt_{ pt.x, pt.y }
-		{ }
+		point_t( POINT const& pt ) :
+			pt_( pt )
+		{}
+
+		point_t( point_t< origin_type::client > const& src ) :
+			pt_( client_to_screen( src ) )
+		{}
 
 		POINT& data() noexcept
 		{
@@ -82,8 +86,16 @@ namespace winapi
 		{
 			return pt_;
 		}
+
+		HWND window_handle() const noexcept
+		{
+			return nullptr;
+		}
+
+	private:
+		static POINT client_to_screen( point_t< origin_type::client > const& src ) noexcept;
 	};
-	
+
 	template <>
 	class point_t< origin_type::client > :
 		public detail::point_impl< point_t< origin_type::client > >
@@ -98,15 +110,19 @@ namespace winapi
 		point_t& operator=( point_t const& ) = default;
 		point_t& operator=( point_t&& ) = default;
 
-		point_t(HWND hwnd, LONG x, LONG y) :
+		point_t( HWND hwnd, LONG x, LONG y ) :
 			pt_{ x, y },
 			hwnd_( hwnd )
 		{ }
 
-		point_t(HWND hwnd, POINT const& pt) :
-			pt_{ pt.x, pt.y },
+		point_t( HWND hwnd, POINT const& pt ) :
+			pt_( pt ),
 			hwnd_( hwnd )
-		{ }
+		{}
+
+		point_t( HWND hwnd, point_t< origin_type::screen > const& src ) :
+			pt_( screen_to_client( hwnd, src ) )
+		{}
 
 		POINT& data() noexcept
 		{
@@ -122,12 +138,31 @@ namespace winapi
 		{
 			return hwnd_;
 		}
+
+	private:
+		static POINT screen_to_client( HWND hwnd, point_t< origin_type::screen > const& src )
+		{
+			POINT dst = src.data();
+			ScreenToClient( hwnd, &dst );
+			return dst;
+		}
 	};
 
-	template <origin_type Origin>
-	inline bool operator==( point_t<Origin> const& lhs, point_t<Origin> const& rhs ) noexcept
+	inline POINT point_t<origin_type::screen>::client_to_screen( point_t< origin_type::client > const& src ) noexcept
+	{
+		POINT dst = src.data();
+		ClientToScreen( src.window_handle(), &dst );
+		return dst;
+	}
+
+	inline bool operator==( point_t<origin_type::screen> const& lhs, point_t<origin_type::screen> const& rhs ) noexcept
 	{
 		return lhs.x() == rhs.x() && lhs.y() == rhs.y();
+	}
+
+	inline bool operator==( point_t<origin_type::client> const& lhs, point_t<origin_type::client> const& rhs ) noexcept
+	{
+		return lhs.window_handle() == rhs.window_handle() && lhs.x() == rhs.x() && lhs.y() == rhs.y();
 	}
 
 	template <origin_type Origin>

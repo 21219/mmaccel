@@ -59,9 +59,6 @@
     <ClInclude Include="winapi\string.hpp">
       <Filter>winapi</Filter>
     </ClInclude>
-    <ClInclude Include="gui\controls_table.hpp">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="gui\menu.hpp">
       <Filter>gui</Filter>
     </ClInclude>

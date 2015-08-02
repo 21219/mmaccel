@@ -169,7 +169,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="file_monitor.hpp" />
-    <ClInclude Include="gui\controls_table.hpp" />
     <ClInclude Include="gui\menu.hpp" />
     <ClInclude Include="gui\message_handler.hpp" />
     <ClInclude Include="gui\version.hpp" />
