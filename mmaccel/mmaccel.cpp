@@ -6,6 +6,8 @@
 #include "winapi/string.hpp"
 #include "gui/menu.hpp"
 #include "gui/version.hpp"
+#include "path.hpp"
+#include "resource.h"
 #include <sstream>
 #include <memory>
 
@@ -83,7 +85,7 @@ namespace mmaccel
 		void start()
 		{
 			mmd_ = winapi::get_window_from_process_id( winapi::get_current_process_id() );
-			menu_ = decltype( menu_ )( mmd_, winapi::get_module_path() + L"\\mmaccel\\mmaccel.dll", L"MMAccel" );
+			menu_ = decltype( menu_ )( mmd_, dll_path(), L"MMAccel" );
 
 			menu_.assign_handler( menu_command< ID_MMACCEL_SETTING >(), [this] { this->run_key_config(); } );
 			menu_.assign_handler( menu_command< ID_MMACCEL_VERSION >(), [this] { version_dialog::show( this->mmd_ ); } );

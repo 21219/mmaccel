@@ -2,6 +2,7 @@
 #include <mmaccel/winapi/module.hpp>
 #include <mmaccel/winapi/directory.hpp>
 #include <mmaccel/mmaccel.hpp>
+#include <mmaccel/path.hpp>
 
 IDirect3D9* create_d3d( UINT version ) noexcept
 {
@@ -40,7 +41,7 @@ void load_mme()
 
 void load_mmaccel()
 {
-	HMODULE mod = winapi::load_library( winapi::get_module_path() + L"\\mmaccel\\mmaccel.dll" );
+	HMODULE mod = winapi::load_library( mmaccel::dll_path() );
 	if( !mod ) {
 		return;
 	}

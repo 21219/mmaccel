@@ -65,6 +65,16 @@
     <ClInclude Include="winapi\point.hpp">
       <Filter>winapi</Filter>
     </ClInclude>
+    <ClInclude Include="path.hpp" />
+    <ClInclude Include="gui\dropdown_box.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\list_view.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\tab.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">
@@ -83,5 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mmd_map.json" />
   </ItemGroup>
 </Project>

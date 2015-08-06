@@ -4,31 +4,13 @@
 #include <mmaccel/winapi/string.hpp>
 #include <clocale>
 #include <locale>
+#include "window.hpp"
 #include "resource.h"
 
-INT_PTR CALLBACK procedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-{
-	if( msg == WM_CLOSE ) {
-		DestroyWindow( hwnd );
-		return TRUE;
-	}
-	else if( msg == WM_DESTROY ) {
-		PostQuitMessage( 0 );
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int showcmd )
+int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 {
 	try {
-		HWND const hwnd = winapi::modeless_dialog_box( IDD_KEY_CONFIG, nullptr, &procedure );
-		if( !hwnd ) {
-			throw std::runtime_error( "cannot create dialog" );
-		}
-
-		ShowWindow( hwnd, showcmd );
+		mmaccel::key_config::window().show();
 
 		MSG msg;
 		for( ;; ) {

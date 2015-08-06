@@ -2,8 +2,9 @@
 
 #include "../winapi/menu.hpp"
 #include "../winapi/directory.hpp"
-#include "message_handler.hpp"
 #include "../utility/type_tuple.hpp"
+#include "message_handler.hpp"
+#include "resource.h"
 
 namespace mmaccel
 {

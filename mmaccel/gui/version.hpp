@@ -3,6 +3,7 @@
 #include "../resource.h"
 #include "../winapi/dialog.hpp"
 #include "../winapi/directory.hpp"
+#include "../path.hpp"
 
 namespace mmaccel
 {
@@ -11,7 +12,7 @@ namespace mmaccel
 	public:
 		static void show( HWND parent ) noexcept
 		{
-			winapi::modal_dialog_box( winapi::get_module_path() + L"\\mmaccel\\mmaccel.dll", IDD_MMACCEL_VERSION, parent, proc );
+			winapi::modal_dialog_box( dll_path(), IDD_MMACCEL_VERSION, parent, proc );
 		}
 
 	private:

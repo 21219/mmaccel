@@ -71,22 +71,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(BOOST_INCLUDE);$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_INCLUDE);$(SolutionDir)\picojson;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(BOOST_INCLUDE);$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_INCLUDE);$(SolutionDir)\picojson;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(BOOST_INCLUDE);$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_INCLUDE);$(SolutionDir)\picojson;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(BOOST_INCLUDE);$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_INCLUDE);$(SolutionDir)\picojson;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -169,10 +169,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="file_monitor.hpp" />
+    <ClInclude Include="gui\dropdown_box.hpp" />
+    <ClInclude Include="gui\list_view.hpp" />
     <ClInclude Include="gui\menu.hpp" />
     <ClInclude Include="gui\message_handler.hpp" />
+    <ClInclude Include="gui\tab.hpp" />
     <ClInclude Include="gui\version.hpp" />
     <ClInclude Include="mmaccel.hpp" />
+    <ClInclude Include="path.hpp" />
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="utility\type_tuple.hpp" />
@@ -199,6 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mmd_map.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
