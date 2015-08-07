@@ -52,4 +52,15 @@ namespace winapi
 		return nullptr;
 	}
 
+	inline std::wstring get_class_name( HWND hwnd )
+	{
+		wchar_t tmp[256];
+
+		if( !GetClassNameW( hwnd, tmp, std::extent< decltype( tmp ) >::value ) ) {
+			return{};
+		}
+
+		return{ tmp };
+	}
+
 } // namespace winapi
