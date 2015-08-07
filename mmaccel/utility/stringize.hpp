@@ -1,0 +1,5 @@
+#pragma once
+
+#define MMACCEL_STRINGIZE(txt) MMACCEL_STRINGIZE_A((txt))
+#define MMACCEL_STRINGIZE_A(arg) MMACCEL_STRINGIZE_I arg
+#define MMACCEL_STRINGIZE_I(txt) L#txt
