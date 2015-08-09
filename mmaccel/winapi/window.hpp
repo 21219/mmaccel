@@ -63,4 +63,12 @@ namespace winapi
 		return{ tmp };
 	}
 
+	inline RECT get_client_rect( HWND hwnd )
+	{
+		RECT rc;
+		GetClientRect( hwnd, &rc );
+
+		return rc;
+	}
+
 } // namespace winapi

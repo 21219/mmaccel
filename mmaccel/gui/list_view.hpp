@@ -16,11 +16,22 @@ namespace mmaccel
 
 		list_view(HWND parent) :
 			ctrl_( GetDlgItem( parent, ID ) )
-		{ }
+		{ 
+			auto const ex = SendMessageW( ctrl_, LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
+			SendMessageW( ctrl_, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, ex | LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT );
+		}
 
 		void clear() noexcept
 		{
+			if( size() == 0 ) {
+				return;
+			}
 			SendMessageW( ctrl_, LVM_DELETEALLITEMS, 0, 0 );
+		}
+
+		std::size_t size() const noexcept
+		{
+			return SendMessageW( ctrl_, LVM_GETITEMCOUNT, 0, 0 );
 		}
 
 		boost::optional< int > current_index() const noexcept
@@ -65,11 +76,18 @@ namespace mmaccel
 			std::wstring wstr( str.data() );
 
 			LVITEMW item;
+			item.iItem = index;
 			item.iSubItem = sub_index;
 			item.mask = LVIF_TEXT;
 			item.pszText = &wstr[0];
+			item.cchTextMax = wstr.size();
 
-			SendMessageW( ctrl_, LVM_SETITEMTEXTW, index, reinterpret_cast<LPARAM>( &item ) );
+			SendMessageW( ctrl_, LVM_INSERTITEMW, 0, reinterpret_cast<LPARAM>( &item ) );
+		}
+
+		HWND handle() const noexcept
+		{
+			return ctrl_;
 		}
 	};
 

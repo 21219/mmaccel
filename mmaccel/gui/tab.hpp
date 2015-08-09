@@ -18,6 +18,11 @@ namespace mmaccel
 			ctrl_( GetDlgItem( parent, ID ) )
 		{ }
 
+		std::size_t size() const noexcept
+		{
+			return static_cast<std::size_t>( SendMessageW( ctrl_, TCM_GETITEMCOUNT, 0, 0 ) );
+		}
+
 		void clear() noexcept
 		{
 			SendMessageW( ctrl_, TCM_DELETEALLITEMS, 0, 0 );
@@ -47,6 +52,16 @@ namespace mmaccel
 			item.pszText = &wstr[0];
 
 			SendMessageW( ctrl_, TCM_INSERTITEMW, index, reinterpret_cast<LPARAM>( &item ) );
+		}
+
+		void push_back(boost::wstring_ref str)
+		{
+			insert( size(), str );
+		}
+
+		HWND handle() const noexcept
+		{
+			return ctrl_;
 		}
 	};
 

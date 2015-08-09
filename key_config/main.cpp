@@ -10,6 +10,12 @@
 int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 {
 	try {
+		INITCOMMONCONTROLSEX icc_ex = {
+			sizeof( INITCOMMONCONTROLSEX ),
+			ICC_WIN95_CLASSES
+		};
+		InitCommonControlsEx( &icc_ex );
+	
 		mmaccel::key_config::window().show();
 
 		MSG msg;

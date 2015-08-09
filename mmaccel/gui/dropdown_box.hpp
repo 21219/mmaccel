@@ -43,6 +43,11 @@ namespace mmaccel
 			std::wstring wstr( str.data() );
 			SendMessageW( ctrl_, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>( &wstr[0] ) );
 		}
+
+		HWND handle() const noexcept
+		{
+			return ctrl_;
+		}
 	};
 
 } // namespace mmaccel
