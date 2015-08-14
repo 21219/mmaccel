@@ -4,10 +4,11 @@
 #include <array>
 #include "../platform.hpp"
 #include "handle.hpp"
+#include "string.hpp"
 
 namespace winapi
 {
-	inline std::wstring get_module_file_name( HMODULE mod = nullptr ) noexcept
+	inline std::string get_module_file_name( HMODULE mod = nullptr ) noexcept
 	{
 		std::array< wchar_t, MAX_PATH * 2 > tmp;
 
@@ -15,10 +16,10 @@ namespace winapi
 			return{};
 		}
 
-		return{ &tmp[0] };
+		return winapi::widechar_to_multibyte( &tmp[0], CP_UTF8 );
 	}
 
-	inline std::wstring get_module_path( HMODULE mod = nullptr ) noexcept
+	inline std::string get_module_path( HMODULE mod = nullptr ) noexcept
 	{
 		auto const name = get_module_file_name( mod );
 		if( name.empty() ) {
@@ -33,7 +34,7 @@ namespace winapi
 		return name.substr( 0, pos );
 	}
 
-	inline std::wstring get_system_directory() noexcept
+	inline std::string get_system_directory() noexcept
 	{
 		std::array< wchar_t, MAX_PATH > tmp;
 		auto const sz = GetSystemDirectoryW( &tmp[0], static_cast< UINT >( tmp.size() ) );
@@ -41,7 +42,7 @@ namespace winapi
 			return{};
 		}
 
-		return{ &tmp[0] };
+		return winapi::widechar_to_multibyte( &tmp[0], CP_UTF8 );
 	}
 
 	class directory_handle
@@ -53,8 +54,8 @@ namespace winapi
 		directory_handle( directory_handle&& ) = default;
 		directory_handle& operator=( directory_handle&& ) = default;
 
-		directory_handle(boost::wstring_ref path, DWORD share, DWORD disposition, DWORD attr, SECURITY_ATTRIBUTES* sa = nullptr) :
-			handle_( CreateFileW( path.data(), FILE_LIST_DIRECTORY, share, sa, disposition, attr, nullptr ) )
+		directory_handle(boost::string_ref path, DWORD share, DWORD disposition, DWORD attr, SECURITY_ATTRIBUTES* sa = nullptr) :
+			handle_( CreateFileW( winapi::multibyte_to_widechar( path, CP_UTF8 ).c_str(), FILE_LIST_DIRECTORY, share, sa, disposition, attr, nullptr ) )
 		{ }
 
 		HANDLE get() const noexcept

@@ -17,7 +17,7 @@ namespace mmaccel
 			file_monitor fm;
 			std::atomic< bool > flg = false;
 
-			fm.start( winapi::get_module_path(), [&flg]( boost::wstring_ref ) { 
+			fm.start( winapi::get_module_path(), [&flg]( boost::string_ref ) { 
 				flg = true;
 				return true;
 			} );
@@ -31,7 +31,7 @@ namespace mmaccel
 
 			Assert::IsTrue( flg );
 
-			DeleteFile( L"test.txt" );
+			DeleteFileW( L"test.txt" );
 		}
 	};
 }

@@ -6,7 +6,7 @@
 
 IDirect3D9* create_d3d( UINT version ) noexcept
 {
-	HMODULE mod = winapi::load_library( winapi::get_system_directory() + L"\\d3d9.dll" );
+	HMODULE mod = winapi::load_library( winapi::get_system_directory() + "\\d3d9.dll" );
 	if( !mod ) {
 		return nullptr;
 	}
@@ -21,7 +21,7 @@ IDirect3D9* create_d3d( UINT version ) noexcept
 
 HRESULT create_d3d_ex( UINT version, IDirect3D9Ex** obj )
 {
-	HMODULE mod = winapi::load_library( winapi::get_system_directory() + L"\\d3d9.dll" );
+	HMODULE mod = winapi::load_library( winapi::get_system_directory() + "\\d3d9.dll" );
 	if( !mod ) {
 		return E_FAIL;
 	}
@@ -36,7 +36,7 @@ HRESULT create_d3d_ex( UINT version, IDirect3D9Ex** obj )
 
 void load_mme() 
 {
-	winapi::load_library( winapi::get_module_path() + L"\\MMHack.dll" );
+	winapi::load_library( winapi::get_module_path() + "\\MMHack.dll" );
 }
 
 void load_mmaccel()

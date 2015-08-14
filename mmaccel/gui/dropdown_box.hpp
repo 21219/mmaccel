@@ -39,14 +39,9 @@ namespace mmaccel
 			SendMessageW( ctrl_, CB_SETCURSEL, index, 0 );
 		}
 
-		void push_back( boost::string_ref str, int code )
+		void push_back( boost::string_ref str )
 		{
-			push_back( winapi::multibyte_to_widechar( str, code ) );
-		}
-
-		void push_back( boost::wstring_ref str )
-		{
-			std::wstring wstr( str.data() );
+			std::wstring  wstr( winapi::multibyte_to_widechar( str, CP_UTF8 ) );
 			SendMessageW( ctrl_, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>( &wstr[0] ) );
 		}
 

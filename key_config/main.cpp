@@ -27,6 +27,9 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 			ICC_WIN95_CLASSES
 		};
 		InitCommonControlsEx( &icc_ex );
+
+		std::locale::global( std::locale( "" ) );
+		std::setlocale( LC_ALL, "" );
 	
 		mmaccel::key_config::window().show();
 
@@ -41,7 +44,7 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 		}
 	}
 	catch( std::exception const& e ) {
-		winapi::message_box( L"MMAccel", winapi::multibyte_to_widechar( e.what(), CP_UTF8 ), MB_OK | MB_ICONERROR );
+		winapi::message_box( "MMAccel", e.what(), MB_OK | MB_ICONERROR );
 	}
 
 	return 0;

@@ -44,9 +44,9 @@ namespace mmaccel
 			SendMessageW( ctrl_, TCM_SETCURSEL, index, 0 );
 		}
 
-		void insert( int index, boost::wstring_ref str )
+		void insert( int index, boost::string_ref str )
 		{
-			std::wstring wstr( str );
+			std::wstring wstr( winapi::multibyte_to_widechar( str, CP_UTF8 ) );
 
 			TCITEMW item;
 			item.mask = TCIF_TEXT;
@@ -55,12 +55,7 @@ namespace mmaccel
 			SendMessageW( ctrl_, TCM_INSERTITEMW, index, reinterpret_cast<LPARAM>( &item ) );
 		}
 
-		void push_back( boost::string_ref str, int code )
-		{
-			push_back( winapi::multibyte_to_widechar( str, code ) );
-		}
-
-		void push_back(boost::wstring_ref str)
+		void push_back(boost::string_ref str)
 		{
 			insert( size(), str );
 		}

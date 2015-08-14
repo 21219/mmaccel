@@ -58,53 +58,43 @@ namespace mmaccel
 			return rc;
 		}
 
-		void insert_column( int index, boost::string_ref str, int code, int cx )
+		void insert_column( int index, boost::string_ref str, int cx )
 		{
-			insert_column( index, winapi::multibyte_to_widechar( str, code ), cx );
-		}
-
-		void insert_column( int index, boost::wstring_ref str, int cx )
-		{
-			std::wstring wstr( str.data() );
+			std::wstring wstr( winapi::multibyte_to_widechar( str, CP_UTF8 ) );
 
 			LVCOLUMNW col;
 			col.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_FMT;
 			col.fmt = LVCFMT_LEFT | LVCFMT_FIXED_WIDTH;
 			col.pszText = &wstr[0];
-			col.cchTextMax = wstr.size();
+			col.cchTextMax = static_cast< int >( wstr.size() );
 			col.cx = cx;
 
 			SendMessageW( ctrl_, LVM_INSERTCOLUMNW, index, reinterpret_cast<LPARAM>( &col ) );
 		}
 
-		void insert( int index, int sub_index, boost::string_ref str, int code )
+		void insert( int index, int sub_index, boost::string_ref str )
 		{
-			insert( index, sub_index, winapi::multibyte_to_widechar( str, code ) );
-		}
-
-		void insert( int index, int sub_index, boost::wstring_ref str )
-		{
-			std::wstring wstr( str.data() );
+			std::wstring wstr( winapi::multibyte_to_widechar( str, CP_UTF8 ) );
 
 			LVITEMW item;
 			item.iItem = index;
 			item.iSubItem = sub_index;
 			item.mask = LVIF_TEXT;
 			item.pszText = &wstr[0];
-			item.cchTextMax = wstr.size();
+			item.cchTextMax = static_cast< int >( wstr.size() );
 
 			SendMessageW( ctrl_, LVM_INSERTITEMW, 0, reinterpret_cast<LPARAM>( &item ) );
 		}
 
-		void set_item_text(int index, int sub_index, boost::wstring_ref str)
+		void set_item_text(int index, int sub_index, boost::string_ref str)
 		{
-			std::wstring wstr( str.data() );
+			std::wstring wstr( winapi::multibyte_to_widechar( str, CP_UTF8 ) );
 
 			LVITEMW item;
 			item.iSubItem = sub_index;
 			item.mask = LVIF_TEXT;
 			item.pszText = &wstr[0];
-			item.cchTextMax = wstr.size();
+			item.cchTextMax = static_cast< int >( wstr.size() );
 
 			SendMessageW( ctrl_, LVM_SETITEMTEXTW, index, reinterpret_cast<LPARAM>( &item ) );
 		}

@@ -24,11 +24,11 @@ namespace mmaccel
 	public:
 		menu() = default;
 
-		menu( HWND hwnd, boost::wstring_ref path, boost::wstring_ref root_name ) :
+		menu( HWND hwnd, boost::string_ref path, boost::string_ref root_name ) :
 			root_( winapi::load_menu( path, ID ) )
 		{
 			auto const src = winapi::get_menu( hwnd );
-			winapi::insert_menu( src, winapi::get_menu_item_count( src ), winapi::get_sub_menu( root_, 0 ), root_name.data() );
+			winapi::insert_menu( src, winapi::get_menu_item_count( src ), winapi::get_sub_menu( root_, 0 ), root_name );
 
 			DrawMenuBar( hwnd );
 		}

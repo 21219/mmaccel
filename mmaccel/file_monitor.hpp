@@ -15,7 +15,7 @@ namespace mmaccel
 
 	public:
 		file_monitor();
-		void start(boost::wstring_ref dir, std::function< bool (boost::wstring_ref) >&&);
+		void start(boost::string_ref dir, std::function< bool (boost::string_ref) >&&);
 		void stop() noexcept;
 		void join();
 	};

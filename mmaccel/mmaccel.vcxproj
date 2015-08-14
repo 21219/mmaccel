@@ -71,23 +71,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(BOOST_INCLUDE);$(SolutionDir)\picojson;$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_INCLUDE);$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(BOOST_INCLUDE);$(SolutionDir)\picojson;$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_INCLUDE);$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(BOOST_INCLUDE);$(SolutionDir)\picojson;$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_INCLUDE);$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(BOOST_INCLUDE);$(SolutionDir)\picojson;$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_INCLUDE);$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -103,7 +107,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"
+copy "$(ProjectDir)mmd_map.json" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\mmd_map.json"
+copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -121,7 +127,9 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"
+copy "$(ProjectDir)mmd_map.json" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\mmd_map.json"
+copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,7 +150,9 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"
+copy "$(ProjectDir)mmd_map.json" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\mmd_map.json"
+copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -164,7 +174,9 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"
+copy "$(ProjectDir)mmd_map.json" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\mmd_map.json"
+copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -175,10 +187,15 @@
     <ClInclude Include="gui\message_handler.hpp" />
     <ClInclude Include="gui\tab.hpp" />
     <ClInclude Include="gui\version.hpp" />
+    <ClInclude Include="keyboard.hpp" />
+    <ClInclude Include="key_handler.hpp" />
+    <ClInclude Include="key_map.hpp" />
     <ClInclude Include="mmaccel.hpp" />
+    <ClInclude Include="mmd_map.hpp" />
     <ClInclude Include="path.hpp" />
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="utility\json.hpp" />
     <ClInclude Include="utility\type_tuple.hpp" />
     <ClInclude Include="winapi\control.hpp" />
     <ClInclude Include="winapi\dialog.hpp" />
@@ -206,6 +223,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="mmd_map.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="key_map.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

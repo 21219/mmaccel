@@ -32,7 +32,7 @@ namespace winapi
 	using loaded_menu_handle = menu_handle< detail::destroy_menu_deleter >;
 	using got_menu_handle = menu_handle< detail::get_menu_deleter >;
 
-	inline loaded_menu_handle load_menu( boost::wstring_ref path, UINT id ) noexcept
+	inline loaded_menu_handle load_menu( boost::string_ref path, UINT id ) noexcept
 	{
 		return loaded_menu_handle( LoadMenuW( get_module_handle( path ), MAKEINTRESOURCEW( id ) ) );
 	}
@@ -49,9 +49,9 @@ namespace winapi
 	}
 
 	template <typename D0, typename D1>
-	inline void insert_menu( menu_handle< D0 > const& m, UINT index, menu_handle< D1 > const& insert_m, boost::wstring_ref str ) noexcept
+	inline void insert_menu( menu_handle< D0 > const& m, UINT index, menu_handle< D1 > const& insert_m, boost::string_ref str ) noexcept
 	{
-		std::wstring tmp( str.begin(), str.end() );
+		std::wstring tmp( winapi::multibyte_to_widechar( str, CP_UTF8 ) );
 
 		MENUITEMINFOW info;
 		ZeroMemory( &info, sizeof( info ) );

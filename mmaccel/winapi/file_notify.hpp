@@ -32,7 +32,7 @@ namespace winapi
 		for( ;; ) {
 			std::wstring str( data->FileName, data->FileName + ( data->FileNameLength / sizeof( wchar_t ) ) );
 
-			if( f( str ) ) {
+			if( f( winapi::widechar_to_multibyte( str, CP_UTF8 ) ) ) {
 				break;
 			}
 			if( data->NextEntryOffset == 0 ) {

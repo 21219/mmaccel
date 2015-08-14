@@ -9,3 +9,8 @@
 
 #undef near
 #undef far
+
+#define BOOST_SPIRIT_USE_PHEONIX_V3
+#define BOOST_SPIRIT_UNICODE
+
+#pragma execution_character_set( "utf-8" )

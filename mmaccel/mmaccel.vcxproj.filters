@@ -75,6 +75,13 @@
     <ClInclude Include="gui\tab.hpp">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="keyboard.hpp" />
+    <ClInclude Include="key_map.hpp" />
+    <ClInclude Include="key_handler.hpp" />
+    <ClInclude Include="utility\json.hpp">
+      <Filter>utility</Filter>
+    </ClInclude>
+    <ClInclude Include="mmd_map.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">
@@ -96,5 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="mmd_map.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="key_map.txt" />
   </ItemGroup>
 </Project>

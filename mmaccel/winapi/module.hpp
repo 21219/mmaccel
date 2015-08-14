@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../platform.hpp"
+#include "string.hpp"
 #include <boost/utility/string_ref.hpp>
 
 namespace winapi
 {
-	inline HMODULE load_library( boost::wstring_ref path ) 
+	inline HMODULE load_library( boost::string_ref path ) 
 	{
-		return LoadLibraryW( path.data() );
+		return LoadLibraryW( winapi::multibyte_to_widechar( path, CP_UTF8 ).c_str() );
 	}
 
 	inline HMODULE get_module_handle() noexcept
@@ -15,9 +16,9 @@ namespace winapi
 		return GetModuleHandleW( nullptr );
 	}
 
-	inline HMODULE get_module_handle( boost::wstring_ref path ) noexcept
+	inline HMODULE get_module_handle( boost::string_ref path ) noexcept
 	{
-		return GetModuleHandleW( path.data() );
+		return GetModuleHandleW( winapi::multibyte_to_widechar( path, CP_UTF8 ).c_str() );
 	}
 
 	template <typename F>

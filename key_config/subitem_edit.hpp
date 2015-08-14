@@ -47,7 +47,7 @@ namespace mmaccel { namespace key_config
 			}
 		}
 
-		std::wstring get_text() const
+		std::string get_text() const
 		{
 			if( !IsWindow( ctrl_ ) ) {
 				return{};
@@ -62,7 +62,7 @@ namespace mmaccel { namespace key_config
 			buf.resize( sz + 1 );
 			SendMessageW( ctrl_, WM_GETTEXT, buf.size(), reinterpret_cast<LPARAM>( &buf[0] ) );
 
-			return buf;
+			return winapi::widechar_to_multibyte( buf, CP_UTF8 );
 		}
 
 		HWND handle() noexcept
@@ -81,7 +81,7 @@ namespace mmaccel { namespace key_config
 			if( msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN ) {
 				auto const keys = get_keyboard_state();
 				auto const str = keys_to_string( keys );
-				SetWindowTextW( hwnd, str.c_str() );
+				SetWindowTextW( hwnd, winapi::multibyte_to_widechar( str, CP_UTF8 ).c_str() );
 				return TRUE;
 			}
 			else if( msg == WM_CHAR ) {

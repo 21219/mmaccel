@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../platform.hpp"
+#include "string.hpp"
 #include "process.hpp"
 #include <vector>
 
@@ -52,7 +53,7 @@ namespace winapi
 		return nullptr;
 	}
 
-	inline std::wstring get_class_name( HWND hwnd )
+	inline std::string get_class_name( HWND hwnd )
 	{
 		wchar_t tmp[256];
 
@@ -60,7 +61,7 @@ namespace winapi
 			return{};
 		}
 
-		return{ tmp };
+		return winapi::widechar_to_multibyte( tmp, CP_UTF8 );
 	}
 
 	inline RECT get_client_rect( HWND hwnd )

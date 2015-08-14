@@ -33,10 +33,10 @@ namespace mmaccel
 				return Func( code, wparam, lparam );
 			}
 			catch( std::exception const& e ) {
-				winapi::message_box( L"MMAccel", winapi::multibyte_to_widechar( e.what(), CP_OEMCP ), MB_OK | MB_ICONERROR );
+				winapi::message_box( "MMAccel", e.what(), MB_OK | MB_ICONERROR );
 			}
 			catch( ... ) {
-				winapi::message_box( L"MMaccel", L"unknown error", MB_OK | MB_ICONERROR );
+				winapi::message_box( "MMaccel", "unknown error", MB_OK | MB_ICONERROR );
 			}
 
 			return CallNextHookEx( nullptr, code, wparam, lparam );
@@ -46,6 +46,7 @@ namespace mmaccel
 	class module_impl
 	{
 		HWND mmd_;
+		HWND sep_;
 
 		menu< 
 			IDR_MMACCEL_MENU, 
@@ -60,7 +61,16 @@ namespace mmaccel
 
 		void call_window_proc( CWPSTRUCT const& cwp )
 		{
-
+			if( cwp.message == WM_ACTIVATE && !( LOWORD( cwp.wParam ) == WA_INACTIVE ) ) {
+				if( winapi::get_class_name( cwp.hwnd ) == "MicWindow" ) {
+					sep_ = cwp.hwnd;
+				}
+			}
+			else if( cwp.message == WM_DESTROY ) {
+				if( winapi::get_class_name( cwp.hwnd ) == "MicWindow" ) {
+					sep_ = nullptr;
+				}
+			}
 		}
 
 		void get_message_proc(MSG& msg)
@@ -85,7 +95,7 @@ namespace mmaccel
 		void start()
 		{
 			mmd_ = winapi::get_window_from_process_id( winapi::get_current_process_id() );
-			menu_ = decltype( menu_ )( mmd_, dll_path(), L"MMAccel" );
+			menu_ = decltype( menu_ )( mmd_, dll_path(), "MMAccel" );
 
 			menu_.assign_handler( menu_command< ID_MMACCEL_SETTING >(), [this] { this->run_key_config(); } );
 			menu_.assign_handler( menu_command< ID_MMACCEL_VERSION >(), [this] { version_dialog::show( this->mmd_ ); } );
@@ -126,7 +136,8 @@ namespace mmaccel
 			ZeroMemory( &si, sizeof( si ) );
 			si.cb = sizeof( STARTUPINFOW );
 
-			if( !CreateProcessW( L"mmaccel\\key_config.exe", nullptr, nullptr, nullptr, FALSE, NORMAL_PRIORITY_CLASS, nullptr, nullptr, &si, &pi ) ) {
+			auto const current_dir = winapi::multibyte_to_widechar( winapi::get_module_path() + "\\mmaccel", CP_UTF8 );
+			if( !CreateProcessW( L"mmaccel\\key_config.exe", nullptr, nullptr, nullptr, FALSE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi ) ) {
 				return;
 			}
 

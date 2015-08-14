@@ -1,5 +1,6 @@
 #include "file_monitor.hpp"
 #include "winapi/file_notify.hpp"
+#include "winapi/string.hpp"
 #include <atomic>
 #include <thread>
 
@@ -7,7 +8,7 @@ namespace mmaccel
 {
 	class file_monitor::impl
 	{
-		std::function< bool( boost::wstring_ref ) > f_;
+		std::function< bool( boost::string_ref ) > f_;
 
 		std::thread th_;
 		std::atomic< bool > exit_flag_;
@@ -28,7 +29,7 @@ namespace mmaccel
 			}
 		}
 
-		void start(boost::wstring_ref dir, std::function< bool( boost::wstring_ref) >&& f)
+		void start(boost::string_ref dir, std::function< bool( boost::string_ref) >&& f)
 		{
 			if( th_.joinable() ) {
 				return;
@@ -87,7 +88,7 @@ namespace mmaccel
 		p_( new impl )
 	{}
 
-	void file_monitor::start( boost::wstring_ref dir, std::function< bool( boost::wstring_ref ) >&& f )
+	void file_monitor::start( boost::string_ref dir, std::function< bool( boost::string_ref ) >&& f )
 	{
 		p_->start( dir, std::move( f ) );
 	}
