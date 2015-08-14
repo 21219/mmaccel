@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../platform.hpp"
+#include "../winapi/string.hpp"
 #include <boost/optional.hpp>
 #include <boost/utility/string_ref.hpp>
 
@@ -36,6 +37,11 @@ namespace mmaccel
 		void set_current_index( int index ) noexcept
 		{
 			SendMessageW( ctrl_, CB_SETCURSEL, index, 0 );
+		}
+
+		void push_back( boost::string_ref str, int code )
+		{
+			push_back( winapi::multibyte_to_widechar( str, code ) );
 		}
 
 		void push_back( boost::wstring_ref str )

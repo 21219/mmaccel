@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../platform.hpp"
+#include "../winapi/string.hpp"
 #include <boost/utility/string_ref.hpp>
 #include <boost/optional.hpp>
 
@@ -52,6 +53,11 @@ namespace mmaccel
 			item.pszText = &wstr[0];
 
 			SendMessageW( ctrl_, TCM_INSERTITEMW, index, reinterpret_cast<LPARAM>( &item ) );
+		}
+
+		void push_back( boost::string_ref str, int code )
+		{
+			push_back( winapi::multibyte_to_widechar( str, code ) );
 		}
 
 		void push_back(boost::wstring_ref str)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../platform.hpp"
+#include "../winapi/string.hpp"
 #include <boost/optional.hpp>
 #include <boost/utility/string_ref.hpp>
 
@@ -57,6 +58,11 @@ namespace mmaccel
 			return rc;
 		}
 
+		void insert_column( int index, boost::string_ref str, int code, int cx )
+		{
+			insert_column( index, winapi::multibyte_to_widechar( str, code ), cx );
+		}
+
 		void insert_column( int index, boost::wstring_ref str, int cx )
 		{
 			std::wstring wstr( str.data() );
@@ -71,6 +77,11 @@ namespace mmaccel
 			SendMessageW( ctrl_, LVM_INSERTCOLUMNW, index, reinterpret_cast<LPARAM>( &col ) );
 		}
 
+		void insert( int index, int sub_index, boost::string_ref str, int code )
+		{
+			insert( index, sub_index, winapi::multibyte_to_widechar( str, code ) );
+		}
+
 		void insert( int index, int sub_index, boost::wstring_ref str )
 		{
 			std::wstring wstr( str.data() );
@@ -83,6 +94,19 @@ namespace mmaccel
 			item.cchTextMax = wstr.size();
 
 			SendMessageW( ctrl_, LVM_INSERTITEMW, 0, reinterpret_cast<LPARAM>( &item ) );
+		}
+
+		void set_item_text(int index, int sub_index, boost::wstring_ref str)
+		{
+			std::wstring wstr( str.data() );
+
+			LVITEMW item;
+			item.iSubItem = sub_index;
+			item.mask = LVIF_TEXT;
+			item.pszText = &wstr[0];
+			item.cchTextMax = wstr.size();
+
+			SendMessageW( ctrl_, LVM_SETITEMTEXTW, index, reinterpret_cast<LPARAM>( &item ) );
 		}
 
 		HWND handle() const noexcept

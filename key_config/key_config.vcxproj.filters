@@ -6,6 +6,7 @@
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="window.hpp" />
+    <ClInclude Include="subitem_edit.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

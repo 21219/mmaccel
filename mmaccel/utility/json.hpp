@@ -26,6 +26,7 @@ namespace mmaccel { namespace json
 
 		using container_type = decltype( data );
 
+		using size_type = container_type::size_type;
 		using iterator = container_type::iterator;
 		using const_iterator = container_type::const_iterator;
 
@@ -34,6 +35,11 @@ namespace mmaccel { namespace json
 		array_type( decltype( data ) const& d ) :
 			data( d )
 		{ }
+
+		size_type size() const noexcept
+		{
+			return data.size();
+		}
 
 		iterator begin() noexcept
 		{
@@ -72,6 +78,7 @@ namespace mmaccel { namespace json
 
 		using container_type = decltype( data );
 
+		using size_type = container_type::size_type;
 		using iterator = container_type::iterator;
 		using const_iterator = container_type::const_iterator;
 		
@@ -80,6 +87,11 @@ namespace mmaccel { namespace json
 		object_type( decltype( data ) const& d ) :
 			data( d )
 		{ }
+
+		size_type size() const noexcept
+		{
+			return data.size();
+		}
 
 		iterator begin() noexcept
 		{
