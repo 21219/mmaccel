@@ -12,6 +12,7 @@
 #include <boost/utility/string_ref.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/range/algorithm.hpp>
+#include "utility/stringize.hpp"
 
 #define MMACCEL_LOWER_ALPHABETS \
 	a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
@@ -19,11 +20,11 @@
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
 
 #define MMACCEL_ALPHABET_TABLE_FUNC(z, n, txt) \
-	{ BOOST_PP_STRINGIZE( BOOST_PP_VARIADIC_ELEM( n, MMACCEL_LOWER_ALPHABETS ) ), BOOST_PP_VARIADIC_ELEM( n, MMACCEL_ALPHABET_CHARS ) },
+	{ MMACCEL_U8_STRINGIZE( BOOST_PP_VARIADIC_ELEM( n, MMACCEL_LOWER_ALPHABETS ) ), BOOST_PP_VARIADIC_ELEM( n, MMACCEL_ALPHABET_CHARS ) },
 
-#define MMACCEL_KEY_N(z, n, txt) { #n, '0' + n },
-#define MMACCEL_NUMPAD_N(z, n, txt) { BOOST_PP_STRINGIZE( num##n ), VK_NUMPAD##n },
-#define MMACCEL_FKEY(z, n, txt) { BOOST_PP_STRINGIZE( f##n ), VK_F##n },
+#define MMACCEL_KEY_N(z, n, txt) { u8#n, '0' + n },
+#define MMACCEL_NUMPAD_N(z, n, txt) { MMACCEL_U8_STRINGIZE( num##n ), VK_NUMPAD##n },
+#define MMACCEL_FKEY(z, n, txt) { MMACCEL_U8_STRINGIZE( f##n ), VK_F##n },
 
 namespace mmaccel
 {
@@ -127,35 +128,35 @@ namespace mmaccel
 
 			keyboard_pairs_impl() :
 				table_{
-					{ "backspace", VK_BACK },
-					{ "tab", VK_TAB },
-					{ "enter", VK_RETURN },
-					{ "shift", VK_SHIFT },
-					{ "ctrl", VK_CONTROL },
-					{ "alt", VK_MENU },
-					{ "pause", VK_PAUSE },
-					{ "capslock", VK_CAPITAL },
-					{ "esc", VK_ESCAPE },
-					{ "space", VK_SPACE },
-					{ "pageup", VK_PRIOR },
-					{ "pagedown", VK_NEXT },
-					{ "end", VK_END },
-					{ "home", VK_HOME },
-					{ "left", VK_LEFT },
-					{ "up", VK_UP },
-					{ "right", VK_RIGHT },
-					{ "down", VK_DOWN },
-					{ "printscreen", VK_SNAPSHOT },
-					{ "insert", VK_INSERT },
-					{ "delete", VK_DELETE },
+					{ u8"backspace", VK_BACK },
+					{ u8"tab", VK_TAB },
+					{ u8"enter", VK_RETURN },
+					{ u8"shift", VK_SHIFT },
+					{ u8"ctrl", VK_CONTROL },
+					{ u8"alt", VK_MENU },
+					{ u8"pause", VK_PAUSE },
+					{ u8"capslock", VK_CAPITAL },
+					{ u8"esc", VK_ESCAPE },
+					{ u8"space", VK_SPACE },
+					{ u8"pageup", VK_PRIOR },
+					{ u8"pagedown", VK_NEXT },
+					{ u8"end", VK_END },
+					{ u8"home", VK_HOME },
+					{ u8"left", VK_LEFT },
+					{ u8"up", VK_UP },
+					{ u8"right", VK_RIGHT },
+					{ u8"down", VK_DOWN },
+					{ u8"printscreen", VK_SNAPSHOT },
+					{ u8"insert", VK_INSERT },
+					{ u8"delete", VK_DELETE },
 					BOOST_PP_REPEAT( 10, MMACCEL_KEY_N, BOOST_PP_EMPTY() )
 					BOOST_PP_REPEAT( BOOST_PP_VARIADIC_SIZE( MMACCEL_LOWER_ALPHABETS ), MMACCEL_ALPHABET_TABLE_FUNC, BOOST_PP_EMPTY() )
 					BOOST_PP_REPEAT( 10, MMACCEL_NUMPAD_N, BOOST_PP_EMPTY() )
-					{ "num*", VK_MULTIPLY },
-					{ "num+", VK_ADD },
-					{ "num-", VK_SUBTRACT },
-					{ "num/", VK_DIVIDE },
-					{ "num.", VK_DECIMAL },
+					{ u8"num*", VK_MULTIPLY },
+					{ u8"num+", VK_ADD },
+					{ u8"num-", VK_SUBTRACT },
+					{ u8"num/", VK_DIVIDE },
+					{ u8"num.", VK_DECIMAL },
 					BOOST_PP_REPEAT_FROM_TO( 1, 25, MMACCEL_FKEY, BOOST_PP_EMPTY() )
 					{ "-", VK_OEM_MINUS },
 					{ ";", VK_OEM_PLUS },
@@ -225,7 +226,7 @@ namespace mmaccel
 			if( !v ) {
 				continue;
 			}
-			oss << L" + " << *v;
+			oss << u8" + " << *v;
 		}
 
 		return oss.str();

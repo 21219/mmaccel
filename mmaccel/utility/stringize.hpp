@@ -1,0 +1,5 @@
+#pragma once
+
+#define MMACCEL_U8_STRINGIZE(str) MMACCEL_U8_STRINGIZE_A((str))
+#define MMACCEL_U8_STRINGIZE_A(arg) MMACCEL_U8_STRINGIZE_I arg
+#define MMACCEL_U8_STRINGIZE_I(text) u8#text

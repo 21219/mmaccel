@@ -196,6 +196,7 @@ copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="utility\json.hpp" />
+    <ClInclude Include="utility\stringize.hpp" />
     <ClInclude Include="utility\type_tuple.hpp" />
     <ClInclude Include="winapi\control.hpp" />
     <ClInclude Include="winapi\dialog.hpp" />

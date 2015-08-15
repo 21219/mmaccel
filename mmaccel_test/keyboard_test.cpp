@@ -13,17 +13,17 @@ namespace mmaccel
 		{
 			{
 				mmaccel::keys_combination keys{ 'A', VK_CONTROL };
-				Assert::IsTrue( mmaccel::keys_to_string( keys ) == std::string( "ctrl + a" ) );
+				Assert::IsTrue( mmaccel::keys_to_string( keys ) == std::string( u8"ctrl + a" ) );
 			}
 			{
 				mmaccel::keys_combination keys{ 'A' };
-				Assert::IsTrue( mmaccel::keys_to_string( keys ) == std::string( "a" ) );
+				Assert::IsTrue( mmaccel::keys_to_string( keys ) == std::string( u8"a" ) );
 			}
 		}
 
 		TEST_METHOD( StringToKeys )
 		{
-			auto const keys = mmaccel::string_to_keys( "ctrl + a" );
+			auto const keys = mmaccel::string_to_keys( u8"ctrl + a" );
 			Assert::IsTrue( keys[0] == VK_CONTROL );
 			Assert::IsTrue( keys[1] == 'A' );
 		}

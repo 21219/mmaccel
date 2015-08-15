@@ -82,6 +82,9 @@
       <Filter>utility</Filter>
     </ClInclude>
     <ClInclude Include="mmd_map.hpp" />
+    <ClInclude Include="utility\stringize.hpp">
+      <Filter>utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">
