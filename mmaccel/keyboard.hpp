@@ -7,6 +7,7 @@
 #include <sstream>
 #include <memory>
 #include <array>
+#include <unordered_map>
 #include <boost/preprocessor.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility/string_ref.hpp>
@@ -89,7 +90,7 @@ namespace mmaccel
 
 	inline bool operator==( keys_combination const& lhs, keys_combination const& rhs ) noexcept
 	{
-		return lhs.keys_ == rhs.keys_;
+		return lhs.size() == rhs.size() && std::equal( lhs.begin(), lhs.end(), rhs.begin() );
 	}
 
 	inline bool operator!=( keys_combination const& lhs, keys_combination const& rhs ) noexcept
@@ -158,18 +159,18 @@ namespace mmaccel
 					{ u8"num/", VK_DIVIDE },
 					{ u8"num.", VK_DECIMAL },
 					BOOST_PP_REPEAT_FROM_TO( 1, 25, MMACCEL_FKEY, BOOST_PP_EMPTY() )
-					{ "-", VK_OEM_MINUS },
-					{ ";", VK_OEM_PLUS },
-					{ ",", VK_OEM_COMMA },
-					{ ".", VK_OEM_PERIOD },
-					{ ":", VK_OEM_1 },
-					{ "/", VK_OEM_2 },
-					{ "@", VK_OEM_3 },
-					{ "[", VK_OEM_4 },
-					{ "\\", VK_OEM_5 },
-					{ "]", VK_OEM_6 },
-					{ "^", VK_OEM_7 },
-					{ "_", VK_OEM_102 },
+					{ u8"-", VK_OEM_MINUS },
+					{ u8";", VK_OEM_PLUS },
+					{ u8",", VK_OEM_COMMA },
+					{ u8".", VK_OEM_PERIOD },
+					{ u8":", VK_OEM_1 },
+					{ u8"/", VK_OEM_2 },
+					{ u8"@", VK_OEM_3 },
+					{ u8"[", VK_OEM_4 },
+					{ u8"\\", VK_OEM_5 },
+					{ u8"]", VK_OEM_6 },
+					{ u8"^", VK_OEM_7 },
+					{ u8"_", VK_OEM_102 },
 				}
 			{ }
 			
@@ -241,7 +242,7 @@ namespace mmaccel
 		);
 
 		std::vector< std::string > strs;
-		if( !qi::phrase_parse( str.begin(), str.end(), rule, qi::space, strs ) ) {
+		if( !qi::phrase_parse( str.begin(), str.end(), rule, qi::unicode::space, strs ) ) {
 			return{};
 		}
 
@@ -353,16 +354,47 @@ namespace mmaccel
 		SetKeyboardState( const_cast<LPBYTE>( &ks.states_[0] ) );
 	}
 
-	inline std::string keys_to_string( keyboard_state const& state )
+	inline keys_combination state_to_combination( keyboard_state const& state )
 	{
 		keys_combination keys;
 		for( keyboard_state::size_type i = 0; i < state.size(); ++i ) {
+			if( i == 0xf0 || i == 0xf3 || i == 0xf6 || i == 0xfb || i >= 0xa0 && i <= 0xa5 ) {
+				continue;
+			}
 			if( state[i] ) {
-				keys.push_back( i );
+				keys.push_back( static_cast< keys_combination::value_type >( i ) );
 			}
 		}
 
-		return keys_to_string( keys );
+		return keys;
+	}
+
+	inline std::string keys_to_string( keyboard_state const& state )
+	{
+		return keys_to_string( state_to_combination( state ) );
 	}
 
 } // namespace mmaccel
+
+namespace std
+{
+	template <>
+	struct hash< mmaccel::keys_combination >
+	{
+		using argument_type = mmaccel::keys_combination;
+		using result_type = std::size_t;
+
+		result_type operator()( mmaccel::keys_combination const& kc ) const
+		{
+			hash< typename mmaccel::keys_combination::value_type > f;
+
+			result_type result = 1;
+			for( auto i : kc ) {
+				result = result * 31 + f( i );
+			}
+
+			return result;
+		}
+	};
+
+} // namespace std

@@ -9,6 +9,15 @@ namespace mmaccel
 	TEST_CLASS( KeyboardTest )
 	{
 	public:
+		TEST_METHOD( KeysCombinationEqual )
+		{
+			mmaccel::keys_combination keys{ VK_CONTROL, 'A' };
+			mmaccel::keys_combination keys2{ VK_CONTROL, 'B' };
+
+			Assert::IsTrue( keys == keys );
+			Assert::IsTrue( keys != keys2 );
+		}
+
 		TEST_METHOD( KeyToString )
 		{
 			{

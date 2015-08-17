@@ -2,6 +2,7 @@
 
 #include "utility/json.hpp"
 #include <boost/utility/string_ref.hpp>
+#include <boost/container/flat_map.hpp>
 #include <fstream>
 #include <stdexcept>
 
@@ -43,6 +44,21 @@ namespace mmaccel { namespace mmd_map
 	inline std::string const& get_friendly_name(json::pair_type const& elem)
 	{
 		return boost::get< std::string >( boost::get< json::array_type >( elem.second )[0] );
+	}
+
+	inline boost::container::flat_map< std::string, json::array_type > get_elements_map(json::data_type const& mm)
+	{
+		boost::container::flat_map< std::string, json::array_type > result;
+
+		for( auto const& i : boost::get< json::object_type >( mm ) ) {
+			for( auto const& j : boost::get< json::object_type >( i.second ) ) {
+				for( auto const& k : boost::get< json::object_type >( j.second ) ) {
+					result.emplace( k.first, boost::get< json::array_type >( k.second ) );
+				}
+			}
+		}
+
+		return result;
 	}
 
 } } // nmaespace mmaccel::mmd_map

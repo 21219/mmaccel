@@ -44,7 +44,7 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 		}
 	}
 	catch( std::exception const& e ) {
-		winapi::message_box( "MMAccel", e.what(), MB_OK | MB_ICONERROR );
+		winapi::message_box( u8"MMAccel", e.what(), MB_OK | MB_ICONERROR );
 	}
 
 	return 0;

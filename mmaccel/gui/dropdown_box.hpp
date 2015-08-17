@@ -26,7 +26,7 @@ namespace mmaccel
 
 		boost::optional< int > current_index() const noexcept
 		{
-			int const index = SendMessageW( ctrl_, CB_GETCURSEL, 0, 0 );
+			int const index = static_cast< int >( SendMessageW( ctrl_, CB_GETCURSEL, 0, 0 ) );
 			if( index == CB_ERR ) {
 				return{};
 			}

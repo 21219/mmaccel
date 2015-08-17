@@ -5,6 +5,7 @@
 #include <memory>
 #include <type_traits>
 #include <boost/utility/string_ref.hpp>
+#include <boost/optional.hpp>
 
 namespace winapi
 {
@@ -68,6 +69,21 @@ namespace winapi
 	inline int get_menu_item_count( menu_handle< Deleter > const& m ) noexcept
 	{
 		return GetMenuItemCount( m.get() );
+	}
+		
+	template <typename Deleter>
+	inline boost::optional< UINT > get_menu_state( menu_handle< Deleter > const& m, int index ) noexcept
+	{
+		MENUITEMINFOW info;
+		ZeroMemory( &info, sizeof( info ) );
+		info.cbSize = sizeof( info );
+		info.fMask = MIIM_STATE;
+
+		if( !GetMenuItemInfoW( m.get(), index, TRUE, &info ) ) {
+			return{};
+		}
+
+		return info.fState;
 	}
  
 } // namespace winapi

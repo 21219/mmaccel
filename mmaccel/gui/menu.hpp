@@ -16,15 +16,15 @@ namespace mmaccel
 	};
 
 	template <DWORD ID, DWORD... SubItems>
-	class menu
+	class menu_t
 	{
 		winapi::loaded_menu_handle root_;
 		message_handler< menu_command< SubItems >... > mh_;
 
 	public:
-		menu() = default;
+		menu_t() = default;
 
-		menu( HWND hwnd, boost::string_ref path, boost::string_ref root_name ) :
+		menu_t( HWND hwnd, boost::string_ref path, boost::string_ref root_name ) :
 			root_( winapi::load_menu( path, ID ) )
 		{
 			auto const src = winapi::get_menu( hwnd );

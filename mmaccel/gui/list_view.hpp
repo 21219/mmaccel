@@ -37,12 +37,12 @@ namespace mmaccel
 
 		boost::optional< int > current_index() const noexcept
 		{
-			auto const index = SendMessageW( ctrl_, LVM_GETNEXTITEM, -1, LVNI_ALL | LVNI_SELECTED );
+			auto const index = SendMessageW( ctrl_, LVM_GETNEXTITEM, static_cast< WPARAM >( -1 ), LVNI_ALL | LVNI_SELECTED );
 			if( index == -1 ) {
 				return{};
 			}
 
-			return index;
+			return static_cast< int >( index );
 		}
 
 		boost::optional< RECT > get_subitem_rect( int item, int subitem ) const noexcept

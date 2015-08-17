@@ -31,7 +31,7 @@ namespace mmaccel
 
 		boost::optional< int > current_index() const noexcept
 		{
-			auto const index = SendMessageW( ctrl_, TCM_GETCURSEL, 0, 0 );
+			int const index = static_cast< int >( SendMessageW( ctrl_, TCM_GETCURSEL, 0, 0 ) );
 			if( index == -1 ) {
 				return{};
 			}
@@ -57,7 +57,7 @@ namespace mmaccel
 
 		void push_back(boost::string_ref str)
 		{
-			insert( size(), str );
+			insert( static_cast< int >( size() ), str );
 		}
 
 		HWND handle() const noexcept

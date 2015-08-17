@@ -1,134 +1,129 @@
 #pragma once
 
-#include "key_handler.hpp"
-#include "keyboard.hpp"
-#include "mmd_map.hpp"
-#include "winapi/string.hpp"
-#include <boost/utility/string_ref.hpp>
+#include "platform.hpp"
+#include <string>
 #include <fstream>
+#include <sstream>
+#include <functional>
+#include <unordered_map>
+#include <boost/spirit/include/qi.hpp>
+#include "mmd_map.hpp"
+#include "keyboard.hpp"
+#include "handler.hpp"
 
 namespace mmaccel
 {
-	class key_map
+	using key_map_t = boost::container::flat_map< std::string, keys_combination >;
+
+	inline void save_key_map( boost::string_ref path, key_map_t const& km, json::data_type const& mm )
 	{
-		std::vector< std::pair< keys_combination, key_handler > > map_;
-
-	public:
-		using value_type = decltype( map_ )::value_type;
-		using size_type = decltype( map_ )::size_type;
-		using iterator = decltype( map_ )::iterator;
-		using const_iterator = decltype( map_ )::const_iterator;
-
-		key_map() = default;
-		key_map( key_map const& ) = default;
-		key_map( key_map&& ) = default;
-		key_map& operator=( key_map const& ) = default;
-		key_map& operator=( key_map&& ) = default;
-
-		bool empty() const noexcept
-		{
-			return map_.empty();
+		std::ofstream ofs( path.data() );
+		if( !ofs ) {
+			return;
 		}
 
-		size_type size() const noexcept
-		{
-			return map_.size();
-		}
+		int c_index = 0;
+		for( auto const& c : mmd_map::get_category( mm ) ) {
+			ofs << u8"##### " << c.first << u8" #####\n";
 
-		iterator begin() noexcept
-		{
-			return map_.begin();
-		}
+			int sub_index = 0;
+			for( auto const& sub : mmd_map::get_sub_category( mm, c_index ) ) {
+				ofs << u8"### " << sub.first << u8" ###\n";
 
-		iterator end() noexcept
-		{
-			return map_.end();
-		}
+				auto const elem = mmd_map::get_elements( mm, c_index, sub_index );
+				for( auto const& e : elem ) {
+					ofs << u8"# " << mmd_map::get_friendly_name( e ) << u8"\n";
+					ofs << e.first << u8" = ";
 
-		const_iterator begin() const noexcept
-		{
-			return map_.begin();
-		}
-
-		const_iterator end() const noexcept
-		{
-			return map_.end();
-		}
-
-		iterator find( boost::string_ref name ) noexcept
-		{
-			return boost::find_if( map_, [this, &name]( value_type const& v ) { return v.second.name == name; } );
-		}
-
-		const_iterator find( boost::string_ref name ) const noexcept
-		{
-			return boost::find_if( map_, [this, &name]( value_type const& v ) { return v.second.name == name; } );
-		}
-
-		void insert( keys_combination&& k, key_handler const& kh )
-		{
-			map_.emplace_back( std::move( k ), kh );
-			boost::stable_sort( map_, []( value_type const& lhs, value_type const& rhs ) { return ( lhs.first.size() > rhs.first.size() ) || ( lhs.first < rhs.first ); } );
-		}
-
-		void erase( iterator itr )
-		{
-			map_.erase( itr );
-		}
-	};
-
-	namespace detail
-	{
-		template <typename F>
-		inline void write_key_map_impl( boost::string_ref path, json::data_type const& mm, F&& f )
-		{
-			std::ofstream ofs( path.data() );
-			if( !ofs ) {
-				return;
-			}
-
-			auto const& category = mmd_map::get_category( mm );
-			std::size_t c_index = 0;
-			for( auto const& c : category ) {
-				ofs << "##### " << c.first << " #####\n";
-
-				auto const& sub_category = mmd_map::get_sub_category( mm, c_index );
-				std::size_t sc_index = 0;
-				for( auto const& sc : sub_category ) {
-					ofs << "### " << sc.first << " ###\n";
-
-					auto const& elements = mmd_map::get_elements( mm, c_index, sc_index );
-					for( auto const& elem : elements ) {
-						ofs << "# " << mmd_map::get_friendly_name( elem ) << "\n";
-						ofs << elem.first << "=" << f( elem.first ) << "\n";
+					auto itr = km.find( e.first );
+					if( itr != km.end() ) {
+						ofs << keys_to_string( itr->second );
 					}
 
-					ofs << "\n";
-					++sc_index;
+					ofs << u8"\n";
 				}
 
-				ofs << "\n";
-				++c_index;
+				ofs << u8"\n";
+				++sub_index;
 			}
+
+			ofs << u8"\n";
+			++c_index;
 		}
-
-	} // namespace detail
-
-	inline void write_key_map( boost::string_ref path, json::data_type const& mm)
-	{
-		detail::write_key_map_impl( path, mm, []( boost::string_ref ) -> std::string { return ""; } );
 	}
 
-	inline void write_key_map( boost::string_ref path, json::data_type const& mm, key_map const& km )
+	inline key_map_t load_key_map( boost::string_ref path )
 	{
-		detail::write_key_map_impl( path, mm, [&km]( boost::string_ref name ) -> std::string {
-			auto itr = km.find( name );
-			if( itr != km.end() ) {
-				return keys_to_string( itr->first );
+		namespace qi = boost::spirit::qi;
+
+		std::ifstream ifs( path.data() );
+		if( !ifs ) {
+			return{};
+		}
+
+		auto const rule_comment = boost::proto::deep_copy( qi::lit( '#' ) >> qi::char_ );
+		auto const rule_map = boost::proto::deep_copy( +qi::alnum >> '=' >> -( +qi::char_ ) );
+
+		key_map_t keys;
+		std::string line;
+		while( std::getline( ifs, line ) ) {
+			if( qi::phrase_parse( line.begin(), line.end(), rule_comment, qi::unicode::space ) ) {
+				continue;
 			}
 
-			return "";
-		} );
+			std::string name;
+			boost::optional< std::string > keys_str;
+			if( !qi::phrase_parse( line.begin(), line.end(), rule_map, qi::unicode::space, name, keys_str ) ) {
+				continue;
+			}
+			if( !keys_str ) {
+				continue;
+			}
+
+			keys.emplace( name, string_to_keys( *keys_str ) );
+		}
+
+		return keys;
+	}
+
+	using key_handler_map_t = std::unordered_map< keys_combination, std::function< void( keyboard_state& ) > >;
+
+	inline key_handler_map_t load_key_handler_map( boost::string_ref path, json::data_type const& mm, HWND mmd )
+	{
+		namespace qi = boost::spirit::qi;
+
+		std::ifstream ifs( path.data() );
+		if( !ifs ) {
+			return{};
+		}
+
+		auto const rule_comment = boost::proto::deep_copy( qi::lit( '#' ) >> qi::char_ );
+		auto const rule_map = boost::proto::deep_copy( +qi::alnum >> '=' >> -( +qi::char_ ) );
+
+		auto const elems = mmd_map::get_elements_map( mm );
+
+		key_handler_map_t khm;
+		std::string line;
+
+		while( std::getline( ifs, line ) ) {
+			if( qi::phrase_parse( line.begin(), line.end(), rule_comment, qi::unicode::space ) ) {
+				continue;
+			}
+
+			std::string name;
+			boost::optional< std::string > keys_str;
+			if( !qi::phrase_parse( line.begin(), line.end(), rule_map, qi::unicode::space, name, keys_str ) ) {
+				continue;
+			}
+			if( !keys_str ) {
+				continue;
+			}
+
+			auto const elem_itr = elems.find( name );
+			khm.emplace( string_to_keys( *keys_str ), make_handler( *elem_itr, mmd ) );
+		}
+
+		return khm;
 	}
 
 } // namespace mmaccel

@@ -66,7 +66,7 @@
         },
         "メイン画面": {
             "MainSet": [ "セット", "button", "22b" ],
-            "MainCurrentFrameFocus": [ "現在フレーム入力", "edit", "0x22a" ],
+            "MainCurrentFrameFocus": [ "現在フレーム入力", "edit", "22a" ],
             "MainGo": [ "Go", "button", "229" ],
             "MainExShadow": [ "美影", "button", "22c" ],
             "MainInfo": [ "情報", "button", "227" ],
@@ -97,7 +97,7 @@
     },
     "カメラ編集": {
         "カメラ": {
-            "CameraFold": [ "折りたたみ", "apply_fold", "1c5", "1c6" ],
+            "CameraFold": [ "折りたたみ", "fold", "1c5", "1c6" ],
             "CameraInit": [ "初期化", "button", "1c3" ],
             "CameraPerspective": [ "パース", "button", "1be" ],
             "CameraPerspectiveFocus": [ "パース角度入力", "edit", "1c0" ],
@@ -108,7 +108,7 @@
             "CameraRegister": [ "登録", "button", "1c4" ]
         },
         "照明": {
-            "LightFold": [ "折りたたみ", "apply_fold", "1d5", "1d6" ],
+            "LightFold": [ "折りたたみ", "fold", "1d5", "1d6" ],
             "LightRedFocus": [ "赤入力", "edit", "1cd" ],
             "LightGreenFocus": [ "緑入力", "edit", "1ce" ],
             "LightBlueFocus": [ "青入力", "edit", "1cf" ],
@@ -119,7 +119,7 @@
             "LightRegister": [ "登録", "button", "1d4" ]
         },
         "セルフ影": {
-            "SelfShadowFold": [ "折りたたみ", "apply_fold", "236", "237" ],
+            "SelfShadowFold": [ "折りたたみ", "fold", "236", "237" ],
             "SelfShadowDisable": [ "影なし", "button", "232" ],
             "SelfShadowMode1": [ "モード1", "button", "233" ],
             "SelfShadowMode2": [ "モード2", "button", "234" ],
@@ -128,7 +128,7 @@
             "SelfShadowChange": [ "モード切り替え", "mode_change_ss" ]
         },
         "アクセサリ": {
-            "AccessoryFold": [ "折りたたみ", "apply_fold", "1e8", "1e9" ],
+            "AccessoryFold": [ "折りたたみ", "fold", "1e8", "1e9" ],
             "AccessorySelectorPrev": [ "アクセサリドロップダウン前項目", "combo_prev", "1d7" ],
             "AccessorySelectorNext": [ "アクセサリドロップダウン次項目", "combo_next", "1d7" ],
             "AccessoryShow": [ "表示", "button", "1dc" ],
@@ -153,7 +153,7 @@
     },
     "モデル編集": {
         "ボーン": {
-            "BoneFold": [ "折りたたみ", "apply_fold", "1f6", "1f7" ],
+            "BoneFold": [ "折りたたみ", "fold", "1f6", "1f7" ],
             "BoneSelect": [ "選択", "button", "1ea" ],
             "BoneRotate": [ "回転", "button", "1ed" ],
             "BoneMove": [ "移動", "button", "1ec" ],
@@ -165,7 +165,7 @@
             "BoneRegister": [ "登録", "button", "1f4" ]
         },
         "表情": {
-            "MorphFold": [ "折りたたみ", "apply_fold", "210", "211" ],
+            "MorphFold": [ "折りたたみ", "fold", "210", "211" ],
             "MorphEyeFocus": [ "目モーフ入力", "edit", "1ff" ],
             "MorphEyeSelectorRegister": [ "目モーフ登録", "button", "20c" ],
             "MorphEyeSelectorPrev": [ "目モーフドロップダウン前項目", "combo_prev", "1fd" ],
