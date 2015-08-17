@@ -106,7 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="mmd_map.json" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="key_map.txt" />
