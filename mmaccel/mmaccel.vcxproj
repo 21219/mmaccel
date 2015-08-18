@@ -220,6 +220,7 @@ copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
   <ItemGroup>
     <ClCompile Include="file_monitor.cpp" />
     <ClCompile Include="mmaccel.cpp" />
+    <ClCompile Include="utility\json.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

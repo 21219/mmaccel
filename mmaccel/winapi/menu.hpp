@@ -33,6 +33,11 @@ namespace winapi
 	using loaded_menu_handle = menu_handle< detail::destroy_menu_deleter >;
 	using got_menu_handle = menu_handle< detail::get_menu_deleter >;
 
+	inline loaded_menu_handle load_menu( UINT id ) noexcept
+	{
+		return loaded_menu_handle( LoadMenuW( get_module_handle(), MAKEINTRESOURCEW( id ) ) );
+	}
+
 	inline loaded_menu_handle load_menu( boost::string_ref path, UINT id ) noexcept
 	{
 		return loaded_menu_handle( LoadMenuW( get_module_handle( path ), MAKEINTRESOURCEW( id ) ) );

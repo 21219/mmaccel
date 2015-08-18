@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "utility/json.hpp"
 #include <boost/utility/string_ref.hpp>
@@ -12,15 +12,14 @@ namespace mmaccel { namespace mmd_map
 	{
 		std::ifstream ifs( path.data() );
 		if( !ifs ) {
-			throw std::runtime_error( "mmd_map.jsonを読み込めませんでした" );
+			throw std::runtime_error( u8"mmd_map.jsonを読み込めませんでした" );
 		}
 
-		json::grammar< boost::spirit::istream_iterator > g;
 		boost::spirit::istream_iterator first( ifs ), last;
 		json::data_type dst;
 
-		if( !boost::spirit::qi::phrase_parse( first, last, g, boost::spirit::unicode::space, dst ) ) {
-			throw std::runtime_error( "mmd_map.jsonにエラーがありました" );
+		if( !json::parse( first, last, dst ) ) {
+			throw std::runtime_error( u8"mmd_map.jsonにエラーがありました" );
 		}
 
 		return dst;

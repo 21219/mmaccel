@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmaccel", "mmaccel\mmaccel.vcxproj", "{FD9DC0A8-3ED0-4EE8-AB07-DEC42E6459C0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0D75F6B9-E7A9-4494-98B9-E99440A55B52} = {0D75F6B9-E7A9-4494-98B9-E99440A55B52}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d3d9", "d3d9\d3d9.vcxproj", "{6A185D5F-ECFD-4B91-A7F5-40C9980D1C29}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -19,6 +16,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmaccel_test", "mmaccel_tes
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "key_config", "key_config\key_config.vcxproj", "{0D75F6B9-E7A9-4494-98B9-E99440A55B52}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FD9DC0A8-3ED0-4EE8-AB07-DEC42E6459C0} = {FD9DC0A8-3ED0-4EE8-AB07-DEC42E6459C0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

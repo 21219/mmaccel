@@ -2,6 +2,7 @@
 
 #include <mmaccel/winapi/dialog.hpp>
 #include <mmaccel/winapi/window.hpp>
+#include <mmaccel/winapi/menu.hpp>
 #include <mmaccel/gui/dropdown_box.hpp>
 #include <mmaccel/gui/list_view.hpp>
 #include <mmaccel/gui/tab.hpp>
@@ -20,6 +21,8 @@ namespace mmaccel { namespace key_config
 		tabs< IDC_TAB > tabs_;
 		list_view< IDC_LIST_VIEW > list_view_;
 		subitem_edit< IDC_SUBITEM_EDIT > subitem_;
+		winapi::loaded_menu_handle popup_root_;
+		winapi::got_menu_handle popup_;
 
 		boost::container::flat_map< std::string, keys_combination > keys_;
 		json::data_type map_;
@@ -30,6 +33,8 @@ namespace mmaccel { namespace key_config
 			tabs_( wnd_ ),
 			list_view_( wnd_ ),
 			subitem_( wnd_, list_view_.handle() ),
+			popup_root_( winapi::load_menu( IDR_MENU_CONTEXT ) ),
+			popup_( winapi::get_sub_menu( popup_root_, 0 ) ),
 			keys_( load_key_map( u8"key_map.txt" ) )
 		{ 
 			load_mmd_map();
@@ -131,6 +136,23 @@ namespace mmaccel { namespace key_config
 			subitem_.hide();
 		}
 
+		void clear_key()
+		{
+			auto const sel_index = selector_.current_index();
+			auto const tab_index = tabs_.current_index();
+			auto const index = list_view_.current_index();
+
+			auto const name = mmd_map::get_elements( map_, *sel_index, *tab_index )[*index].first;
+			auto const itr = keys_.find( name );
+			if( itr == keys_.end() ) {
+				return;
+			}
+
+			keys_.erase( itr );
+
+			list_view_.set_item_text( *index, 1, u8"" );
+		}
+
 		void on_sizing(int edge, RECT& rc)
 		{
 		}
@@ -148,6 +170,9 @@ namespace mmaccel { namespace key_config
 			}
 			else if( hwnd == subitem_.handle() && code == EN_KILLFOCUS ) {
 				apply_subitem();
+			}
+			else if( id == ID_MENU_CLEAR ) {
+				clear_key();
 			}
 			else if( id == IDOK ) {
 				apply_subitem();
@@ -194,6 +219,14 @@ namespace mmaccel { namespace key_config
 				}
 				else if( nmhdr.code == LVN_BEGINSCROLL ) {
 					apply_subitem();
+				}
+				else if( nmhdr.code == NM_RCLICK ) {
+					NMITEMACTIVATE const& nia = *reinterpret_cast<NMITEMACTIVATE const*>( lparam );
+					if( nia.iItem > 0 ) {
+						POINT pt;
+						GetCursorPos( &pt );
+						TrackPopupMenu( popup_.get(), pt.x, pt.y, TPM_LEFTALIGN, 0, wnd_, nullptr );
+					}
 				}
 			}
 		}
