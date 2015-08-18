@@ -110,7 +110,4 @@
   <ItemGroup>
     <None Include="mmd_map.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="key_map.txt" />
-  </ItemGroup>
 </Project>

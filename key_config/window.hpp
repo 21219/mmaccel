@@ -222,10 +222,10 @@ namespace mmaccel { namespace key_config
 				}
 				else if( nmhdr.code == NM_RCLICK ) {
 					NMITEMACTIVATE const& nia = *reinterpret_cast<NMITEMACTIVATE const*>( lparam );
-					if( nia.iItem > 0 ) {
+					if( nia.iItem >= 0 ) {
 						POINT pt;
 						GetCursorPos( &pt );
-						TrackPopupMenu( popup_.get(), pt.x, pt.y, TPM_LEFTALIGN, 0, wnd_, nullptr );
+						TrackPopupMenu( popup_.get(), TPM_LEFTALIGN | TPM_TOPALIGN, pt.x, pt.y, 0, wnd_, nullptr );
 					}
 				}
 			}

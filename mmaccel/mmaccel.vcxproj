@@ -228,9 +228,6 @@ copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
   <ItemGroup>
     <None Include="mmd_map.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="key_map.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
