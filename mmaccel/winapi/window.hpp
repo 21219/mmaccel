@@ -72,4 +72,12 @@ namespace winapi
 		return rc;
 	}
 
+	inline RECT get_window_rect( HWND hwnd )
+	{
+		RECT rc;
+		GetWindowRect( hwnd, &rc );
+
+		return rc;
+	}
+
 } // namespace winapi
