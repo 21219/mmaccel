@@ -27,6 +27,8 @@ namespace mmaccel { namespace key_config
 		boost::container::flat_map< std::string, keys_combination > keys_;
 		json::data_type map_;
 
+		SIZE tabs_offset;
+
 		window_impl():
 			wnd_( winapi::modeless_dialog_box( IDD_KEY_CONFIG, nullptr, &proc ) ),
 			selector_( wnd_ ),
@@ -39,6 +41,12 @@ namespace mmaccel { namespace key_config
 		{ 
 			load_mmd_map();
 			init_controls();
+
+			auto const wnd_rc = winapi::get_window_rect( wnd_ );
+			auto const tabs_rc = winapi::get_window_rect( tabs_.handle() );
+
+			tabs_offset.cx = wnd_rc.right - tabs_rc.right;
+			tabs_offset.cy = wnd_rc.bottom - tabs_rc.bottom;
 		}
 
 	public:
@@ -153,8 +161,19 @@ namespace mmaccel { namespace key_config
 			list_view_.set_item_text( *index, 1, u8"" );
 		}
 
-		void on_sizing(int edge, RECT& rc)
+		void on_sizing(HWND hwnd, int edge, RECT& rc)
 		{
+			if( hwnd != wnd_ ) {
+				return;
+			}
+
+			auto const tabs_rc = winapi::get_window_rect( tabs_.handle() );
+			SetWindowPos( 
+				tabs_.handle(), nullptr, 0, 0, 
+				( rc.right - rc.left ) - ( tabs_rc.left - rc.left ) - tabs_offset.cx, 
+				( rc.bottom - rc.left ) - ( tabs_rc.top - rc.top ) - tabs_offset.cy, 
+				SWP_NOMOVE | SWP_NOZORDER 
+			);
 		}
 
 		void on_command(int id, int code, HWND hwnd)
@@ -240,7 +259,7 @@ namespace mmaccel { namespace key_config
 		static INT_PTR CALLBACK proc( HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam )
 		{
 			if( msg == WM_SIZING ) {
-				instance().on_sizing( wparam, *reinterpret_cast<RECT *>( lparam ) );
+				instance().on_sizing( hwnd, wparam, *reinterpret_cast<RECT *>( lparam ) );
 			}
 			else if( msg == WM_NOTIFY ) {
 				instance().on_notify( static_cast< DWORD >( wparam ), lparam );
@@ -265,7 +284,7 @@ namespace mmaccel { namespace key_config
 			return FALSE;
 		}
 	};
-const 
+
 	inline window_impl& window()
 	{
 		return window_impl::instance();
