@@ -14,6 +14,64 @@
 
 namespace mmaccel { namespace key_config
 {
+	class control_mover
+	{
+		HWND ctrl_;
+		POINT offset_;
+
+	public:
+		control_mover( HWND ctrl ) :
+			ctrl_( ctrl )
+		{
+			RECT const parent_rc = winapi::get_window_rect( GetParent( ctrl ) );
+			RECT const ctrl_rc = winapi::get_window_rect( ctrl );
+
+			offset_.x = parent_rc.right - ctrl_rc.left + GetSystemMetrics( SM_CXFRAME ) * 2;
+			offset_.y = parent_rc.bottom - ctrl_rc.top + GetSystemMetrics( SM_CYCAPTION ) + GetSystemMetrics( SM_CYFRAME ) * 2;
+		}
+
+		void on_sizing( int, RECT const& rc )
+		{
+			RECT const ctrl_rc = winapi::get_window_rect( ctrl_ );
+
+			SetWindowPos(
+				ctrl_, nullptr,
+				( rc.right - rc.left ) - offset_.x,
+				( rc.bottom - rc.top ) - offset_.y,
+				0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW
+			);
+		}
+	};
+
+	class control_resizer
+	{
+		HWND ctrl_;
+		SIZE offset_;
+
+	public:
+		control_resizer( HWND ctrl ) :
+			ctrl_( ctrl )
+		{
+			RECT const parent_rc = winapi::get_window_rect( GetParent( ctrl ) );
+			RECT const ctrl_rc = winapi::get_window_rect( ctrl );
+
+			offset_.cx = parent_rc.right - ctrl_rc.right;
+			offset_.cy = parent_rc.bottom - ctrl_rc.bottom;
+		}
+
+		void on_sizing( int, RECT const& rc ) 
+		{
+			RECT const ctrl_rc = winapi::get_window_rect( ctrl_ );
+
+			SetWindowPos( 
+				ctrl_, nullptr, 0, 0, 
+				( rc.right - rc.left ) - ( ctrl_rc.left - rc.left ) - offset_.cx,
+				( rc.bottom - rc.top ) - ( ctrl_rc.top - rc.top ) - offset_.cy,
+				SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW
+			);
+		}
+	};
+
 	class window_impl
 	{
 		HWND wnd_;
@@ -27,9 +85,10 @@ namespace mmaccel { namespace key_config
 		boost::container::flat_map< std::string, keys_combination > keys_;
 		json::data_type map_;
 
-		SIZE tabs_offset;
+		std::array< control_mover, 3 > movers;
+		std::array< control_resizer, 2 > resizers;
 
-		window_impl():
+		window_impl() :
 			wnd_( winapi::modeless_dialog_box( IDD_KEY_CONFIG, nullptr, &proc ) ),
 			selector_( wnd_ ),
 			tabs_( wnd_ ),
@@ -37,16 +96,12 @@ namespace mmaccel { namespace key_config
 			subitem_( wnd_, list_view_.handle() ),
 			popup_root_( winapi::load_menu( IDR_MENU_CONTEXT ) ),
 			popup_( winapi::get_sub_menu( popup_root_, 0 ) ),
-			keys_( load_key_map( u8"key_map.txt" ) )
+			keys_( load_key_map( u8"key_map.txt" ) ),
+			movers{ { GetDlgItem( wnd_, IDOK ), GetDlgItem( wnd_, IDCANCEL ), GetDlgItem( wnd_, IDAPPLY ) } },
+			resizers{ { tabs_.handle(), list_view_.handle() } }
 		{ 
 			load_mmd_map();
 			init_controls();
-
-			auto const wnd_rc = winapi::get_window_rect( wnd_ );
-			auto const tabs_rc = winapi::get_window_rect( tabs_.handle() );
-
-			tabs_offset.cx = wnd_rc.right - tabs_rc.right;
-			tabs_offset.cy = wnd_rc.bottom - tabs_rc.bottom;
 		}
 
 	public:
@@ -161,19 +216,20 @@ namespace mmaccel { namespace key_config
 			list_view_.set_item_text( *index, 1, u8"" );
 		}
 
-		void on_sizing(HWND hwnd, int edge, RECT& rc)
+		void on_sizing(HWND hwnd, int frame, RECT& rc)
 		{
 			if( hwnd != wnd_ ) {
 				return;
 			}
 
-			auto const tabs_rc = winapi::get_window_rect( tabs_.handle() );
-			SetWindowPos( 
-				tabs_.handle(), nullptr, 0, 0, 
-				( rc.right - rc.left ) - ( tabs_rc.left - rc.left ) - tabs_offset.cx, 
-				( rc.bottom - rc.left ) - ( tabs_rc.top - rc.top ) - tabs_offset.cy, 
-				SWP_NOMOVE | SWP_NOZORDER 
-			);
+			for( auto& i : movers ) {
+				i.on_sizing( frame, rc );
+			}
+			for( auto& i : resizers ) {
+				i.on_sizing( frame, rc );
+			}
+
+			InvalidateRect( wnd_, nullptr, TRUE );
 		}
 
 		void on_command(int id, int code, HWND hwnd)
