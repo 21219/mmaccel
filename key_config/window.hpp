@@ -120,7 +120,7 @@ namespace mmaccel { namespace key_config
 		void init_controls()
 		{
 			RECT const rc = winapi::get_client_rect( list_view_.handle() );
-			auto const cx = ( rc.right - rc.left ) / 2;
+			int const cx = ( rc.right - rc.left ) / 2;
 
 			list_view_.insert_column( 0, u8"ìÆçÏ", cx - GetSystemMetrics( SM_CXVSCROLL ) );
 			list_view_.insert_column( 1, u8"ÉLÅ[", cx );
@@ -216,7 +216,7 @@ namespace mmaccel { namespace key_config
 			list_view_.set_item_text( *index, 1, u8"" );
 		}
 
-		void on_sizing(HWND hwnd, int frame, RECT& rc)
+		void on_sizing( HWND hwnd, int frame, RECT& rc )
 		{
 			if( hwnd != wnd_ ) {
 				return;
@@ -229,7 +229,11 @@ namespace mmaccel { namespace key_config
 				i.on_sizing( frame, rc );
 			}
 
-			InvalidateRect( wnd_, nullptr, TRUE );
+			auto const lv_rc = winapi::get_client_rect( list_view_.handle() );
+			list_view_.set_column_size( 0, ( lv_rc.right - lv_rc.left ) / 2 );
+			list_view_.set_column_size( 1, ( lv_rc.right - lv_rc.left ) / 2 );
+
+			InvalidateRect( wnd_, nullptr, FALSE );
 		}
 
 		void on_command(int id, int code, HWND hwnd)

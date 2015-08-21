@@ -72,6 +72,21 @@ namespace mmaccel
 			SendMessageW( ctrl_, LVM_INSERTCOLUMNW, index, reinterpret_cast<LPARAM>( &col ) );
 		}
 
+		void set_column_size( int index, int sz )
+		{
+			LVCOLUMNW col;
+			col.mask = LVCF_WIDTH;
+			col.cx = sz;
+
+			SendMessageW( ctrl_, LVM_SETCOLUMNW, index, reinterpret_cast<LPARAM>( &col ) );
+		}
+
+		bool is_shown_vscroll() const
+		{
+			auto const styles = GetWindowLongPtr( ctrl_, GWL_STYLE );
+			return ( styles & WS_VSCROLL ) != 0;
+		}
+
 		void insert( int index, int sub_index, boost::string_ref str )
 		{
 			std::wstring wstr( winapi::multibyte_to_widechar( str, CP_UTF8 ) );
