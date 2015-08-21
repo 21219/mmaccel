@@ -19,7 +19,7 @@ namespace mmaccel
 			ctrl_( GetDlgItem( parent, ID ) )
 		{ 
 			auto const ex = SendMessageW( ctrl_, LVM_GETEXTENDEDLISTVIEWSTYLE, 0, 0 );
-			SendMessageW( ctrl_, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, ex | LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT );
+			SendMessageW( ctrl_, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, ex | LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER );
 		}
 
 		void clear() noexcept

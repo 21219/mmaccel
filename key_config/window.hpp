@@ -38,7 +38,7 @@ namespace mmaccel { namespace key_config
 				ctrl_, nullptr,
 				( rc.right - rc.left ) - offset_.x,
 				( rc.bottom - rc.top ) - offset_.y,
-				0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW
+				0, 0, SWP_NOSIZE | SWP_NOZORDER 
 			);
 		}
 	};
@@ -67,7 +67,7 @@ namespace mmaccel { namespace key_config
 				ctrl_, nullptr, 0, 0, 
 				( rc.right - rc.left ) - ( ctrl_rc.left - rc.left ) - offset_.cx,
 				( rc.bottom - rc.top ) - ( ctrl_rc.top - rc.top ) - offset_.cy,
-				SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW
+				SWP_NOMOVE | SWP_NOZORDER
 			);
 		}
 	};
@@ -86,7 +86,7 @@ namespace mmaccel { namespace key_config
 		json::data_type map_;
 
 		std::array< control_mover, 3 > movers;
-		std::array< control_resizer, 2 > resizers;
+		std::array< control_resizer, 1 > resizers;
 
 		window_impl() :
 			wnd_( winapi::modeless_dialog_box( IDD_KEY_CONFIG, nullptr, &proc ) ),
@@ -98,7 +98,7 @@ namespace mmaccel { namespace key_config
 			popup_( winapi::get_sub_menu( popup_root_, 0 ) ),
 			keys_( load_key_map( u8"key_map.txt" ) ),
 			movers{ { GetDlgItem( wnd_, IDOK ), GetDlgItem( wnd_, IDCANCEL ), GetDlgItem( wnd_, IDAPPLY ) } },
-			resizers{ { tabs_.handle(), list_view_.handle() } }
+			resizers{ { list_view_.handle() } }
 		{ 
 			load_mmd_map();
 			init_controls();
@@ -233,7 +233,7 @@ namespace mmaccel { namespace key_config
 			list_view_.set_column_size( 0, ( lv_rc.right - lv_rc.left ) / 2 );
 			list_view_.set_column_size( 1, ( lv_rc.right - lv_rc.left ) / 2 );
 
-			InvalidateRect( wnd_, nullptr, FALSE );
+			UpdateWindow( wnd_ );
 		}
 
 		void on_command(int id, int code, HWND hwnd)
