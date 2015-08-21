@@ -4,7 +4,7 @@
 #include "../winapi/directory.hpp"
 #include "../utility/type_tuple.hpp"
 #include "message_handler.hpp"
-#include "resource.h"
+#include "../resource.h"
 
 namespace mmaccel
 {

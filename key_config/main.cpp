@@ -30,14 +30,20 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 		std::locale::global( std::locale( "" ) );
 		std::setlocale( LC_ALL, "" );
+
+		STARTUPINFOW si;
+		GetStartupInfoW( &si );
 	
-		mmaccel::key_config::window().show();
+		mmaccel::key_config::window().show( si.dwX, si.dwY );
 
 		MSG msg;
 		for( ;; ) {
 			auto const result = GetMessageW( &msg, nullptr, 0, 0 );
 			if( result == 0 || result == -1 ) {
 				break;
+			}
+			if( IsDialogMessageW( mmaccel::key_config::window().handle(), &msg ) ) {
+				continue;
 			}
 
 			DispatchMessageW( &msg );

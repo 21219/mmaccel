@@ -99,15 +99,26 @@ namespace mmaccel { namespace key_config
 			keys_( load_key_map( u8"key_map.txt" ) ),
 			movers{ { GetDlgItem( wnd_, IDOK ), GetDlgItem( wnd_, IDCANCEL ), GetDlgItem( wnd_, IDAPPLY ) } },
 			resizers{ { list_view_.handle() } }
-		{ 
+		{
 			load_mmd_map();
 			init_controls();
 		}
 
 	public:
-		void show() const noexcept
+		void show(int x, int y) const noexcept
 		{
+			SetWindowPos( wnd_, nullptr, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER );
 			ShowWindow( wnd_, SW_SHOW );
+		}
+
+		HWND handle() noexcept
+		{
+			return wnd_;
+		}
+
+		HWND handle() const noexcept
+		{
+			return wnd_;
 		}
 
 		static window_impl& instance()

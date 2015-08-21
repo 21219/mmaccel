@@ -50,7 +50,7 @@ namespace mmaccel
 	{
 		HWND mmd_;
 		HWND sep_;
-		menu_t< IDR_MMACCEL_MENU, ID_MMACCEL_SETTING, ID_MMACCEL_ERROR_LOG, ID_MMACCEL_VERSION > menu_;
+		menu_t< IDR_MMACCEL_MENU, ID_MMACCEL_SETTING, ID_MMACCEL_VERSION > menu_;
 
 		bool dialog_;
 		std::atomic< bool > update_;
@@ -221,8 +221,13 @@ namespace mmaccel
 			PROCESS_INFORMATION pi;
 			STARTUPINFOW si;
 
+			RECT const rc = winapi::get_window_rect( mmd_ );
+
 			ZeroMemory( &si, sizeof( si ) );
 			si.cb = sizeof( STARTUPINFOW );
+			si.dwFlags = STARTF_USEPOSITION;
+			si.dwX = rc.left;
+			si.dwY = rc.top;
 
 			auto const current_dir = winapi::multibyte_to_widechar( winapi::get_module_path() + u8"\\mmaccel", CP_UTF8 );
 			if( !CreateProcessW( L"mmaccel\\key_config.exe", nullptr, nullptr, nullptr, FALSE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi ) ) {
