@@ -132,8 +132,7 @@ namespace mmaccel
 					else if( winapi::get_class_name( cwp.hwnd ) == u8"#32770" ) {
 						dialog_ = false;
 					}
-					
-					if( cwp.hwnd == mmd_ ) {
+					else if( cwp.hwnd == mmd_ ) {
 						if( key_config_ && IsWindow( key_config_ ) ) {
 							PostMessageW( key_config_, WM_CLOSE, 0, 0 );
 						}
