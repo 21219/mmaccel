@@ -61,6 +61,8 @@ namespace mmaccel
 		winapi::hook_handle hook_cwp_;
 		winapi::hook_handle hook_gm_;
 
+		HWND key_config_;
+
 		module_impl():
 			dialog_( false ),
 			update_( false )
@@ -129,6 +131,12 @@ namespace mmaccel
 					}
 					else if( winapi::get_class_name( cwp.hwnd ) == u8"#32770" ) {
 						dialog_ = false;
+					}
+					
+					if( cwp.hwnd == mmd_ ) {
+						if( key_config_ && IsWindow( key_config_ ) ) {
+							PostMessageW( key_config_, WM_CLOSE, 0, 0 );
+						}
 					}
 				}
 			}
@@ -216,23 +224,59 @@ namespace mmaccel
 			update_ = true;
 		}
 
+		HWND get_key_config_window(HANDLE hread)
+		{
+			std::uintptr_t p = 0;
+			DWORD byte;
+
+			if( !ReadFile( hread, &p, sizeof( std::uintptr_t ), &byte, nullptr ) ) {
+				winapi::last_error_message_box( u8"MMAccel", u8"ReadFile error" );
+				return nullptr;
+			}
+
+			return reinterpret_cast< HWND >( p );
+		}
+
 		void run_key_config()
 		{
 			PROCESS_INFORMATION pi;
 			STARTUPINFOW si;
+			SECURITY_ATTRIBUTES sa = { sizeof( SECURITY_ATTRIBUTES ), nullptr, TRUE };
+			HANDLE hread, hwrite;
+
+			if( !CreatePipe( &hread, &hwrite, &sa, 0 ) ) {
+				return;
+			}
+
+			if( !DuplicateHandle( GetCurrentProcess(), hread, GetCurrentProcess(), nullptr, 0, FALSE, DUPLICATE_SAME_ACCESS ) ) {
+				CloseHandle( hread );
+				CloseHandle( hwrite );
+				winapi::last_error_message_box( u8"MMAccel", u8"run_key_config DuplicateHandle error" );
+				return;
+			}
 
 			RECT const rc = winapi::get_window_rect( mmd_ );
 
 			ZeroMemory( &si, sizeof( si ) );
 			si.cb = sizeof( STARTUPINFOW );
-			si.dwFlags = STARTF_USEPOSITION;
+			si.dwFlags = STARTF_USEPOSITION | STARTF_USESTDHANDLES;
 			si.dwX = rc.left;
 			si.dwY = rc.top;
+			si.hStdOutput = hwrite;
+			si.hStdInput = GetStdHandle( STD_INPUT_HANDLE );
+			si.hStdError = GetStdHandle( STD_ERROR_HANDLE );
 
 			auto const current_dir = winapi::multibyte_to_widechar( winapi::get_module_path() + u8"\\mmaccel", CP_UTF8 );
-			if( !CreateProcessW( L"mmaccel\\key_config.exe", nullptr, nullptr, nullptr, FALSE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi ) ) {
+			if( !CreateProcessW( L"mmaccel\\key_config.exe", nullptr, nullptr, nullptr, TRUE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi ) ) {
+				CloseHandle( hread );
+				CloseHandle( hwrite );
+				winapi::last_error_message_box( u8"MMAccel", u8"run_key_config CreateProcess error" );
 				return;
 			}
+			key_config_ = get_key_config_window( hread );
+
+			CloseHandle( hwrite );
+			CloseHandle( hread );
 
 			CloseHandle( pi.hThread );
 			CloseHandle( pi.hProcess );

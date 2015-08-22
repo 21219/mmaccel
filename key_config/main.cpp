@@ -4,6 +4,7 @@
 #include <mmaccel/winapi/string.hpp>
 #include <clocale>
 #include <locale>
+#include <sstream>
 #include "window.hpp"
 #include "resource.h"
 
@@ -18,6 +19,17 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 #endif
+
+void write_key_config_window( HANDLE hwrite )
+{
+	auto const p = reinterpret_cast<std::uintptr_t>( mmaccel::key_config::window().handle() );
+	DWORD sz;
+
+	if( !WriteFile( hwrite, &p, sizeof( std::uintptr_t ), &sz, nullptr ) ) {
+		winapi::last_error_message_box( u8"MMAccel key_config", u8"WriteFile error" );
+		return;
+	}
+}
 
 int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 {
@@ -34,6 +46,10 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 		STARTUPINFOW si;
 		GetStartupInfoW( &si );
 	
+		if( si.hStdOutput ) {
+			write_key_config_window( si.hStdOutput );
+		}
+
 		mmaccel::key_config::window().show( si.dwX, si.dwY );
 
 		MSG msg;
