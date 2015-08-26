@@ -100,9 +100,6 @@
   <ItemGroup>
     <ClCompile Include="mmaccel.cpp" />
     <ClCompile Include="file_monitor.cpp" />
-    <ClCompile Include="utility\json.cpp">
-      <Filter>utility</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

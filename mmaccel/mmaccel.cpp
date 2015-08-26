@@ -83,7 +83,13 @@ namespace mmaccel
 		void start()
 		{
 			try {
-				mmd_ = winapi::get_window_from_process_id( winapi::get_current_process_id() );
+				auto const wnds = winapi::get_window_from_process_id( winapi::get_current_process_id() );
+				for( HWND w : wnds ) {
+					if( winapi::get_class_name( w ) == u8"Polygon Movie Maker" ) {
+						mmd_ = w;
+						break;
+					}
+				}
 
 				menu_ = decltype( menu_ )( mmd_, dll_path(), u8"MMAccel" );
 				menu_.assign_handler( menu_command< ID_MMACCEL_SETTING >(), [this] { this->run_key_config(); } );
@@ -266,7 +272,11 @@ namespace mmaccel
 			si.hStdError = GetStdHandle( STD_ERROR_HANDLE );
 
 			auto const current_dir = winapi::multibyte_to_widechar( winapi::get_module_path() + u8"\\mmaccel", CP_UTF8 );
-			if( !CreateProcessW( L"mmaccel\\key_config.exe", nullptr, nullptr, nullptr, TRUE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi ) ) {
+			std::wstring args( L"--mmd" );
+			if( !CreateProcessW( 
+				( winapi::multibyte_to_widechar( winapi::get_module_path(), CP_UTF8 ) + L"\\mmaccel\\key_config.exe" ).c_str(), 
+				&args[0], nullptr, nullptr, TRUE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi 
+			) ) {
 				CloseHandle( hread );
 				CloseHandle( hwrite );
 				winapi::last_error_message_box( u8"MMAccel", u8"run_key_config CreateProcess error" );

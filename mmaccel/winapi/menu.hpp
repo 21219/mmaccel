@@ -55,7 +55,7 @@ namespace winapi
 	}
 
 	template <typename D0, typename D1>
-	inline void insert_menu( menu_handle< D0 > const& m, UINT index, menu_handle< D1 > const& insert_m, boost::string_ref str ) noexcept
+	inline bool insert_menu( menu_handle< D0 > const& m, UINT index, menu_handle< D1 > const& insert_m, boost::string_ref str ) noexcept
 	{
 		std::wstring tmp( winapi::multibyte_to_widechar( str, CP_UTF8 ) );
 
@@ -67,7 +67,7 @@ namespace winapi
 		info.dwTypeData = &tmp[0];
 		info.hSubMenu = insert_m.get();
 
-		InsertMenuItemW( m.get(), index, TRUE, &info );
+		return InsertMenuItemW( m.get(), index, TRUE, &info ) != 0;
 	}
 
 	template <typename Deleter>

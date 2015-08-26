@@ -1,8 +1,12 @@
 #include <mmaccel/platform.hpp>
 #include <mmaccel/winapi/module.hpp>
 #include <mmaccel/winapi/directory.hpp>
+#include <mmaccel/winapi/message_box.hpp>
 #include <mmaccel/mmaccel.hpp>
+#include <cassert>
 #include <mmaccel/path.hpp>
+
+HMODULE mmaccel_mod_;
 
 IDirect3D9* create_d3d( UINT version ) noexcept
 {
@@ -39,24 +43,33 @@ void load_mme()
 	winapi::load_library( winapi::get_module_path() + "\\MMHack.dll" );
 }
 
-void load_mmaccel()
+void load_mmaccel_hook()
 {
-	HMODULE mod = winapi::load_library( mmaccel::dll_path() );
-	if( !mod ) {
+	if( !mmaccel_mod_ ) {
 		return;
 	}
 
-	auto const hooks = winapi::get_proc_address< decltype( &mmaccel_register_hooks ) >( mod, "mmaccel_register_hooks" );
+	auto const hooks = winapi::get_proc_address< decltype( &mmaccel_register_hooks ) >( mmaccel_mod_, "mmaccel_register_hooks" );
 	if( !hooks ) {
 		return;
 	}
 
-	auto const start = winapi::get_proc_address< decltype( &mmaccel_start) >( mod, "mmaccel_start" );
-	if( !start ) {
+	hooks();
+}
+
+void load_mmaccel()
+{
+	if( !mmaccel_mod_ ) {
+		winapi::message_box( u8"MMAccel", u8"mmaccel.dllをロードできませんでした", MB_OK | MB_ICONERROR );
 		return;
 	}
 
-	hooks();
+	auto const start = winapi::get_proc_address< decltype( &mmaccel_start) >( mmaccel_mod_, "mmaccel_start" );
+	if( !start ) {
+		winapi::last_error_message_box( u8"MMAccel", u8"MMAccelを開始できませんでした" );
+		return;
+	}
+
 	start();
 }
 
@@ -65,7 +78,6 @@ extern "C"
 	IDirect3D9* WINAPI proxy_Direct3DCreate9( UINT version )
 	{
 		load_mmaccel();
-
 		return create_d3d( version );
 	}
 
@@ -77,6 +89,8 @@ extern "C"
 	BOOL APIENTRY DllMain( HINSTANCE, DWORD reason, LPVOID )
 	{
 		if( reason == DLL_PROCESS_ATTACH ) {
+			mmaccel_mod_ = winapi::load_library( mmaccel::dll_path() );
+			load_mmaccel_hook();
 			load_mme();
 		}
 

@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <shlwapi.h>
+#include <shellapi.h>
 #include <d3d9.h>
 
 #undef near

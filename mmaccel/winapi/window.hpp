@@ -40,17 +40,18 @@ namespace winapi
 		return wnds;
 	}
 
-	inline HWND get_window_from_process_id( process_id const& id )
+	inline std::vector< HWND > get_window_from_process_id( process_id const& id )
 	{
 		auto const wnds = enum_windows();
+		std::vector< HWND > result;
 
 		for( HWND w : wnds ) {
 			if( id == get_process_id( w ) ) {
-				return w;
+				result.push_back( w );
 			}
 		}
 
-		return nullptr;
+		return result;
 	}
 
 	inline std::string get_class_name( HWND hwnd )

@@ -46,9 +46,13 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 		STARTUPINFOW si;
 		GetStartupInfoW( &si );
 	
-		if( si.hStdOutput ) {
+		int args_sz = 0;
+		auto args = CommandLineToArgvW( GetCommandLineW(), &args_sz );
+
+		if( args_sz > 0 && boost::wstring_ref( args[0] ) == L"--mmd" ) {
 			write_key_config_window( si.hStdOutput );
 		}
+		LocalFree( args );
 
 		mmaccel::key_config::window().show( si.dwX, si.dwY );
 
