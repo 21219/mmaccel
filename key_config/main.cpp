@@ -2,6 +2,7 @@
 #include <mmaccel/winapi/message_box.hpp>
 #include <mmaccel/winapi/dialog.hpp>
 #include <mmaccel/winapi/string.hpp>
+#include <mmaccel/winapi/command_line.hpp>
 #include <clocale>
 #include <locale>
 #include <sstream>
@@ -46,13 +47,10 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 		STARTUPINFOW si;
 		GetStartupInfoW( &si );
 	
-		int args_sz = 0;
-		auto args = CommandLineToArgvW( GetCommandLineW(), &args_sz );
-
-		if( args_sz > 0 && boost::wstring_ref( args[0] ) == L"--mmd" ) {
+		auto const args = winapi::get_command_line_args();
+		if( !args.empty() && args[0] == L"--mmd" ) {
 			write_key_config_window( si.hStdOutput );
 		}
-		LocalFree( args );
 
 		mmaccel::key_config::window().show( si.dwX, si.dwY );
 

@@ -85,6 +85,12 @@
     </ClInclude>
     <ClInclude Include="key_map.hpp" />
     <ClInclude Include="handler.hpp" />
+    <ClInclude Include="winapi\command_line.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
+    <ClInclude Include="winapi\memory.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">

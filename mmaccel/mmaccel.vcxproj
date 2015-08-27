@@ -200,6 +200,7 @@ copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     <ClInclude Include="utility\json.hpp" />
     <ClInclude Include="utility\stringize.hpp" />
     <ClInclude Include="utility\type_tuple.hpp" />
+    <ClInclude Include="winapi\command_line.hpp" />
     <ClInclude Include="winapi\control.hpp" />
     <ClInclude Include="winapi\dialog.hpp" />
     <ClInclude Include="winapi\directory.hpp" />
@@ -207,6 +208,7 @@ copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     <ClInclude Include="winapi\file_notify.hpp" />
     <ClInclude Include="winapi\handle.hpp" />
     <ClInclude Include="winapi\hook.hpp" />
+    <ClInclude Include="winapi\memory.hpp" />
     <ClInclude Include="winapi\menu.hpp" />
     <ClInclude Include="winapi\message_box.hpp" />
     <ClInclude Include="winapi\module.hpp" />
