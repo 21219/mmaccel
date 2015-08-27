@@ -17,7 +17,7 @@ namespace winapi
 		std::vector< std::wstring > result;
 
 		for( int i = 0; i < sz; ++i ) {
-			result.emplace_back( std::wstring( args.get()[i] ) );
+			result.emplace_back( args.get()[i] );
 		}
 
 		return result;
