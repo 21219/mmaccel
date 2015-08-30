@@ -274,7 +274,7 @@ namespace mmaccel
 			si.hStdInput = GetStdHandle( STD_INPUT_HANDLE );
 			si.hStdError = GetStdHandle( STD_ERROR_HANDLE );
 
-			auto const target_exe = winapi::multibyte_to_widechar( winapi::get_module_path(), CP_UTF8 ) + L"\\mmaccel\\key_config.exe";
+			auto const target_exe = winapi::multibyte_to_widechar( winapi::get_module_path() + u8"\\mmaccel\\key_config.exe", CP_UTF8 );
 			auto const current_dir = winapi::multibyte_to_widechar( winapi::get_module_path() + u8"\\mmaccel", CP_UTF8 );
 			std::wstring args( L"--mmd" );
 			if( !CreateProcessW( target_exe.c_str(), &args[0], nullptr, nullptr, TRUE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi ) ) {
