@@ -91,6 +91,9 @@
     <ClInclude Include="winapi\memory.hpp">
       <Filter>winapi</Filter>
     </ClInclude>
+    <ClInclude Include="winapi\pipe.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">

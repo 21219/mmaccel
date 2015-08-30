@@ -213,6 +213,7 @@ copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     <ClInclude Include="winapi\message_box.hpp" />
     <ClInclude Include="winapi\module.hpp" />
     <ClInclude Include="winapi\overlapped.hpp" />
+    <ClInclude Include="winapi\pipe.hpp" />
     <ClInclude Include="winapi\point.hpp" />
     <ClInclude Include="winapi\process.hpp" />
     <ClInclude Include="winapi\string.hpp" />

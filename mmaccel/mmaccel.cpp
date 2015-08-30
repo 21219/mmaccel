@@ -4,6 +4,7 @@
 #include "winapi/thread.hpp"
 #include "winapi/message_box.hpp"
 #include "winapi/string.hpp"
+#include "winapi/pipe.hpp"
 #include "path.hpp"
 #include "file_monitor.hpp"
 #include "resource.h"
@@ -122,31 +123,26 @@ namespace mmaccel
 	private:
 		void call_window_proc( CWPSTRUCT const& cwp )
 		{
-			try {
-				if( cwp.message == WM_ACTIVATE && !( LOWORD( cwp.wParam ) == WA_INACTIVE ) ) {
-					if( winapi::get_class_name( cwp.hwnd ) == u8"MicWindow" ) {
-						sep_ = cwp.hwnd;
-					}
-					else if( winapi::get_class_name( cwp.hwnd ) == u8"#32770" ) {
-						dialog_ = true;
-					}
+			if( cwp.message == WM_ACTIVATE && !( LOWORD( cwp.wParam ) == WA_INACTIVE ) ) {
+				if( winapi::get_class_name( cwp.hwnd ) == u8"MicWindow" ) {
+					sep_ = cwp.hwnd;
 				}
-				else if( cwp.message == WM_DESTROY ) {
-					if( winapi::get_class_name( cwp.hwnd ) == u8"MicWindow" ) {
-						sep_ = nullptr;
-					}
-					else if( winapi::get_class_name( cwp.hwnd ) == u8"#32770" ) {
-						dialog_ = false;
-					}
-					else if( cwp.hwnd == mmd_ ) {
-						if( key_config_ && IsWindow( key_config_ ) ) {
-							PostMessageW( key_config_, WM_CLOSE, 0, 0 );
-						}
-					}
+				else if( winapi::get_class_name( cwp.hwnd ) == u8"#32770" ) {
+					dialog_ = true;
 				}
 			}
-			catch( std::exception const& e ) {
-				winapi::message_box( u8"MMAccel", e.what(), MB_OK | MB_ICONERROR );
+			else if( cwp.message == WM_DESTROY ) {
+				if( winapi::get_class_name( cwp.hwnd ) == u8"MicWindow" ) {
+					sep_ = nullptr;
+				}
+				else if( winapi::get_class_name( cwp.hwnd ) == u8"#32770" ) {
+					dialog_ = false;
+				}
+				else if( cwp.hwnd == mmd_ ) {
+					if( key_config_ && IsWindow( key_config_ ) ) {
+						PostMessageW( key_config_, WM_CLOSE, 0, 0 );
+					}
+				}
 			}
 		}
 
@@ -158,9 +154,15 @@ namespace mmaccel
 				}
 				
 				auto ks = get_keyboard_state();
-				auto const kc = state_to_combination( ks );
-				auto const rng = khm_.equal_range( kc );
+				auto kc = state_to_combination( ks );
+				for( auto const& k : kc ) {
+					if( !( GetAsyncKeyState( k ) & 0x8000 ) ) {
+						ks[k] = false;
+					}
+				}
+				kc = state_to_combination( ks );
 
+				auto const rng = khm_.equal_range( kc );
 				if( rng.first == khm_.end() && rng.second == khm_.end() ) {
 					return;
 				}
@@ -173,7 +175,6 @@ namespace mmaccel
 				}
 
 				set_keyboard_state( ks );
-				msg.wParam = 0;
 			}
 			else if( msg.message == WM_KEYUP || msg.message == WM_SYSKEYUP ) {
 				if( dialog_ ) {
@@ -229,12 +230,12 @@ namespace mmaccel
 			update_ = true;
 		}
 
-		HWND get_key_config_window(HANDLE hread)
+		HWND get_key_config_window(winapi::unique_handle const& hread)
 		{
 			std::uintptr_t p = 0;
 			DWORD byte;
 
-			if( !ReadFile( hread, &p, sizeof( std::uintptr_t ), &byte, nullptr ) ) {
+			if( !ReadFile( hread.get(), &p, sizeof( std::uintptr_t ), &byte, nullptr ) ) {
 				winapi::last_error_message_box( u8"MMAccel", u8"ReadFile error" );
 				return nullptr;
 			}
@@ -244,22 +245,24 @@ namespace mmaccel
 
 		void run_key_config()
 		{
-			PROCESS_INFORMATION pi;
-			STARTUPINFOW si;
 			SECURITY_ATTRIBUTES sa = { sizeof( SECURITY_ATTRIBUTES ), nullptr, TRUE };
-			HANDLE hread, hwrite;
-
-			if( !CreatePipe( &hread, &hwrite, &sa, 0 ) ) {
+			
+			auto pipe = winapi::create_pipe( sa );
+			if( !pipe ) {
+				winapi::last_error_message_box( u8"MMAccel", u8"run_key_config CreatePipe error" );
 				return;
 			}
 
-			if( !DuplicateHandle( GetCurrentProcess(), hread, GetCurrentProcess(), nullptr, 0, FALSE, DUPLICATE_SAME_ACCESS ) ) {
-				CloseHandle( hread );
-				CloseHandle( hwrite );
+			auto read_tmp = winapi::duplicate_handle( GetCurrentProcess(), pipe->read_handle, GetCurrentProcess(), 0, FALSE, DUPLICATE_SAME_ACCESS );
+			if( !read_tmp ) {
 				winapi::last_error_message_box( u8"MMAccel", u8"run_key_config DuplicateHandle error" );
 				return;
 			}
+			std::swap( pipe->read_handle, read_tmp );
+			read_tmp.release();
 
+			STARTUPINFOW si;
+			PROCESS_INFORMATION pi;
 			RECT const rc = winapi::get_window_rect( mmd_ );
 
 			ZeroMemory( &si, sizeof( si ) );
@@ -267,25 +270,18 @@ namespace mmaccel
 			si.dwFlags = STARTF_USEPOSITION | STARTF_USESTDHANDLES;
 			si.dwX = rc.left;
 			si.dwY = rc.top;
-			si.hStdOutput = hwrite;
+			si.hStdOutput = pipe->write_handle.get();
 			si.hStdInput = GetStdHandle( STD_INPUT_HANDLE );
 			si.hStdError = GetStdHandle( STD_ERROR_HANDLE );
 
+			auto const target_exe = winapi::multibyte_to_widechar( winapi::get_module_path(), CP_UTF8 ) + L"\\mmaccel\\key_config.exe";
 			auto const current_dir = winapi::multibyte_to_widechar( winapi::get_module_path() + u8"\\mmaccel", CP_UTF8 );
 			std::wstring args( L"--mmd" );
-			if( !CreateProcessW( 
-				( winapi::multibyte_to_widechar( winapi::get_module_path(), CP_UTF8 ) + L"\\mmaccel\\key_config.exe" ).c_str(), 
-				&args[0], nullptr, nullptr, TRUE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi 
-			) ) {
-				CloseHandle( hread );
-				CloseHandle( hwrite );
+			if( !CreateProcessW( target_exe.c_str(), &args[0], nullptr, nullptr, TRUE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi ) ) {
 				winapi::last_error_message_box( u8"MMAccel", u8"run_key_config CreateProcess error" );
 				return;
 			}
-			key_config_ = get_key_config_window( hread );
-
-			CloseHandle( hwrite );
-			CloseHandle( hread );
+			key_config_ = get_key_config_window( pipe->read_handle );
 
 			CloseHandle( pi.hThread );
 			CloseHandle( pi.hProcess );
