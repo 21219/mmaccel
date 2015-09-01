@@ -3,6 +3,7 @@
 #include <mmaccel/winapi/dialog.hpp>
 #include <mmaccel/winapi/window.hpp>
 #include <mmaccel/winapi/menu.hpp>
+#include <mmaccel/winapi/icon.hpp>
 #include <mmaccel/gui/dropdown_box.hpp>
 #include <mmaccel/gui/list_view.hpp>
 #include <mmaccel/gui/tab.hpp>
@@ -102,6 +103,9 @@ namespace mmaccel { namespace key_config
 		{
 			load_mmd_map();
 			init_controls();
+
+			winapi::set_icon( wnd_, IDI_KEY_CONFIG_ICON );
+			winapi::set_small_icon( wnd_, IDI_KEY_CONFIG_ICON );
 		}
 
 	public:
