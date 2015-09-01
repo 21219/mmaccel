@@ -247,8 +247,13 @@ namespace mmaccel { namespace key_config
 			auto const lv_rc = winapi::get_client_rect( list_view_.handle() );
 			list_view_.set_column_size( 0, ( lv_rc.right - lv_rc.left ) / 2 );
 			list_view_.set_column_size( 1, ( lv_rc.right - lv_rc.left ) / 2 );
+		}
 
-			UpdateWindow( wnd_ );
+		void on_size()
+		{
+			InvalidateRect( winapi::get_dlg_item( wnd_, IDOK ), nullptr, TRUE );
+			InvalidateRect( winapi::get_dlg_item( wnd_, IDCANCEL ), nullptr, TRUE );
+			InvalidateRect( winapi::get_dlg_item( wnd_, IDAPPLY ), nullptr, TRUE );
 		}
 
 		void on_command(int id, int code, HWND hwnd)
@@ -335,6 +340,9 @@ namespace mmaccel { namespace key_config
 		{
 			if( msg == WM_SIZING ) {
 				instance().on_sizing( hwnd, wparam, *reinterpret_cast<RECT *>( lparam ) );
+			}
+			else if( msg == WM_SIZE ) {
+				instance().on_size();
 			}
 			else if( msg == WM_NOTIFY ) {
 				instance().on_notify( static_cast< DWORD >( wparam ), lparam );
