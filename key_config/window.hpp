@@ -4,6 +4,7 @@
 #include <mmaccel/winapi/window.hpp>
 #include <mmaccel/winapi/menu.hpp>
 #include <mmaccel/winapi/icon.hpp>
+#include <mmaccel/winapi/directory.hpp>
 #include <mmaccel/gui/dropdown_box.hpp>
 #include <mmaccel/gui/list_view.hpp>
 #include <mmaccel/gui/tab.hpp>
@@ -145,7 +146,7 @@ namespace mmaccel { namespace key_config
 
 		void load_mmd_map()
 		{
-			map_ = mmd_map::load( u8"mmd_map.json" );
+			map_ = mmd_map::load( winapi::get_module_path() + u8"\\mmd_map.json" );
 
 			auto const& root = mmd_map::get_category( map_ );
 			for( auto const& i : root ) {

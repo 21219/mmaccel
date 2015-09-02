@@ -219,7 +219,7 @@ namespace mmaccel
 				return;
 			}
 			
-			auto const mm = mmd_map::load( u8"mmaccel\\mmd_map.json" );
+			auto const mm = mmd_map::load( winapi::get_module_path() + u8"\\mmaccel\\mmd_map.json" );
 			auto const key_map_path = winapi::get_module_path() + u8"\\mmaccel\\key_map.txt";
 			if( !PathFileExistsW( winapi::multibyte_to_widechar( key_map_path, CP_UTF8 ).c_str() ) ) {
 				save_key_map( key_map_path, {}, mm );

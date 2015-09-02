@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "utility/json.hpp"
 #include <boost/utility/string_ref.hpp>
