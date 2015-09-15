@@ -153,28 +153,45 @@ namespace mmaccel
 					return;
 				}
 				
+				
 				auto ks = get_keyboard_state();
 				auto kc = state_to_combination( ks );
-				for( auto const& k : kc ) {
-					if( !( GetAsyncKeyState( k ) & 0x8000 ) ) {
-						ks[k] = false;
+#ifdef _DEBUG
+				OutputDebugStringW( winapi::multibyte_to_widechar( keys_to_string( kc ) + u8" : ", CP_UTF8 ).c_str() );
+#endif
+				for( auto const& i : kc ) {
+					if( !( GetAsyncKeyState( i ) & 0x8000 ) ) {
+						ks[i] = false;
 					}
 				}
 				kc = state_to_combination( ks );
-
+#ifdef _DEBUG
+				OutputDebugStringW( winapi::multibyte_to_widechar( keys_to_string( kc ) + u8"\n", CP_UTF8 ).c_str() );
+#endif
 				auto const rng = khm_.equal_range( kc );
-				if( rng.first == khm_.end() && rng.second == khm_.end() ) {
+				if( rng.first == khm_.end() ) {
+					return;
+				}
+
+				if( winapi::get_class_name( msg.hwnd ) == u8"EDIT" ) {
+					for( auto itr = rng.first; itr != rng.second; itr = std::next( itr ) ) {
+						if( itr->second.name == u8"kill_focus" ) {
+							itr->second.func( ks );
+						}
+					}
 					return;
 				}
 
 				for( auto const i : kc ) {
 					ks[i] = false;
 				}
+
 				for( auto itr = rng.first; itr != rng.second; itr = std::next( itr ) ) {
-					itr->second( ks );
+					itr->second.func( ks );
 				}
 
 				set_keyboard_state( ks );
+				msg.wParam = 0;
 			}
 			else if( msg.message == WM_KEYUP || msg.message == WM_SYSKEYUP ) {
 				if( dialog_ ) {
@@ -225,7 +242,7 @@ namespace mmaccel
 				save_key_map( key_map_path, {}, mm );
 			}
 		
-			khm_ = load_key_handler_map( u8"mmaccel\\key_map.txt", mm, mmd_ );
+			khm_ = load_key_handler_map( winapi::get_module_path() + u8"\\mmaccel\\key_map.txt", mm, mmd_ );
 
 			update_ = true;
 		}

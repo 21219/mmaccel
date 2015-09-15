@@ -13,6 +13,7 @@
 #include <boost/utility/string_ref.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/range/algorithm.hpp>
+#include <boost/functional/hash.hpp>
 #include "utility/stringize.hpp"
 
 #define MMACCEL_LOWER_ALPHABETS \
@@ -388,9 +389,9 @@ namespace std
 		{
 			hash< typename mmaccel::keys_combination::value_type > f;
 
-			result_type result = 1;
+			result_type result = 0;
 			for( auto i : kc ) {
-				result = result * 31 + f( i );
+				boost::hash_combine( result, i );
 			}
 
 			return result;

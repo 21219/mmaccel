@@ -86,7 +86,7 @@ namespace mmaccel
 		return keys;
 	}
 
-	using key_handler_map_t = std::unordered_map< keys_combination, std::function< void( keyboard_state& ) > >;
+	using key_handler_map_t = std::unordered_map< keys_combination, handler_t >;
 
 	inline key_handler_map_t load_key_handler_map( boost::string_ref path, json::data_type const& mm, HWND mmd )
 	{
