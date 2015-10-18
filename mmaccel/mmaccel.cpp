@@ -146,16 +146,40 @@ namespace mmaccel
 			}
 		}
 
+		bool kill_focus(keyboard_state& ks, keys_combination const& kc)
+		{
+			std::string upper_class_name;
+			boost::transform( winapi::get_class_name( GetFocus() ), std::back_inserter( upper_class_name ), []( char c ) { return std::toupper( c ); } );
+			if( upper_class_name == u8"EDIT" ) {
+				auto const rng = khm_.equal_range( kc );
+				for( auto const& handler : boost::make_iterator_range( rng ) ) {
+					if( handler.second.name == u8"kill_focus" ) {
+						handler.second.func( ks );
+						break;
+					}
+				}
+				return true;
+			}
+
+			return false;
+		}
+
 		void get_message_proc( MSG& msg )
 		{
 			if( msg.message == WM_KEYDOWN || msg.message == WM_SYSKEYDOWN ) {
 				if( dialog_ ) {
-					return;
+					return;					
+
 				}
-				
 				
 				auto ks = get_keyboard_state();
 				auto kc = state_to_combination( ks );
+
+				if( GetFocus() != nullptr ) {
+					if( kill_focus( ks, kc ) ) {
+						return;
+					}
+				}
 #ifdef _DEBUG
 				OutputDebugStringW( winapi::multibyte_to_widechar( keys_to_string( kc ) + u8" : ", CP_UTF8 ).c_str() );
 #endif
@@ -165,6 +189,7 @@ namespace mmaccel
 					}
 				}
 				kc = state_to_combination( ks );
+
 #ifdef _DEBUG
 				OutputDebugStringW( winapi::multibyte_to_widechar( keys_to_string( kc ) + u8"\n", CP_UTF8 ).c_str() );
 #endif
@@ -173,21 +198,12 @@ namespace mmaccel
 					return;
 				}
 
-				if( winapi::get_class_name( msg.hwnd ) == u8"EDIT" ) {
-					for( auto itr = rng.first; itr != rng.second; itr = std::next( itr ) ) {
-						if( itr->second.name == u8"kill_focus" ) {
-							itr->second.func( ks );
-						}
-					}
-					return;
-				}
-
 				for( auto const i : kc ) {
 					ks[i] = false;
 				}
 
-				for( auto itr = rng.first; itr != rng.second; itr = std::next( itr ) ) {
-					itr->second.func( ks );
+				for( auto const& handler : boost::make_iterator_range( rng ) ) {
+					handler.second.func( ks );
 				}
 
 				set_keyboard_state( ks );
