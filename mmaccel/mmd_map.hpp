@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "utility/json.hpp"
 #include <boost/utility/string_ref.hpp>
@@ -10,7 +10,7 @@ namespace mmaccel { namespace mmd_map
 {
 	inline json::data_type load(boost::string_ref path)
 	{
-		std::ifstream ifs( path.data() );
+		std::ifstream ifs( winapi::convert_string( path, CP_UTF8, CP_OEMCP ).c_str() );
 		if( !ifs ) {
 			throw std::runtime_error( u8"mmd_map.jsonを読み込めませんでした" );
 		}

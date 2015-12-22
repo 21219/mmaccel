@@ -21,9 +21,9 @@
 #endif
 #endif
 
-void write_key_config_window( HANDLE hwrite )
+void write_key_config_window( HANDLE hwrite, HWND wnd )
 {
-	auto const p = reinterpret_cast<std::uintptr_t>( mmaccel::key_config::window().handle() );
+	auto const p = reinterpret_cast<std::uintptr_t>( wnd );
 	DWORD sz;
 
 	if( !WriteFile( hwrite, &p, sizeof( std::uintptr_t ), &sz, nullptr ) ) {
@@ -41,18 +41,18 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 		};
 		InitCommonControlsEx( &icc_ex );
 
-		std::locale::global( std::locale( "" ) );
-		std::setlocale( LC_ALL, "" );
+		std::locale::global( std::locale( "ja-JP" ) );
+		std::setlocale( LC_ALL, "ja-JP" );
 
 		STARTUPINFOW si;
 		GetStartupInfoW( &si );
+
+		mmaccel::key_config::window().show( si.dwX, si.dwY );
 	
 		auto const args = winapi::get_command_line_args();
 		if( !args.empty() && args[0] == L"--mmd" ) {
-			write_key_config_window( si.hStdOutput );
+			write_key_config_window( si.hStdOutput, mmaccel::key_config::window().handle() );
 		}
-
-		mmaccel::key_config::window().show( si.dwX, si.dwY );
 
 		MSG msg;
 		for( ;; ) {
@@ -68,6 +68,10 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 		}
 	}
 	catch( std::exception const& e ) {
+		STARTUPINFOW si;
+		GetStartupInfoW( &si );
+
+		write_key_config_window( si.hStdOutput, nullptr );
 		winapi::message_box( u8"MMAccel", e.what(), MB_OK | MB_ICONERROR );
 	}
 

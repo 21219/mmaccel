@@ -7,6 +7,7 @@
 #include <functional>
 #include <unordered_map>
 #include <boost/spirit/include/qi.hpp>
+#include "winapi/string.hpp"
 #include "mmd_map.hpp"
 #include "keyboard.hpp"
 #include "handler.hpp"
@@ -17,7 +18,7 @@ namespace mmaccel
 
 	inline void save_key_map( boost::string_ref path, key_map_t const& km, json::data_type const& mm )
 	{
-		std::ofstream ofs( path.data() );
+		std::ofstream ofs( winapi::convert_string( path.data(), CP_UTF8, CP_OEMCP ).c_str() );
 		if( !ofs ) {
 			return;
 		}
@@ -56,7 +57,7 @@ namespace mmaccel
 	{
 		namespace qi = boost::spirit::qi;
 
-		std::ifstream ifs( path.data() );
+		std::ifstream ifs( winapi::convert_string( path.data(), CP_UTF8, CP_OEMCP ).c_str() );
 		if( !ifs ) {
 			return{};
 		}
@@ -92,7 +93,7 @@ namespace mmaccel
 	{
 		namespace qi = boost::spirit::qi;
 
-		std::ifstream ifs( path.data() );
+		std::ifstream ifs( winapi::convert_string( path.data(), CP_UTF8, CP_OEMCP ).c_str() );
 		if( !ifs ) {
 			return{};
 		}

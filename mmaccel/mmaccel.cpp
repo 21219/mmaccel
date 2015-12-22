@@ -14,6 +14,8 @@
 #include <atomic>
 #include <sstream>
 #include <memory>
+#include <locale>
+#include <clocale>
 
 namespace mmaccel
 {
@@ -207,7 +209,6 @@ namespace mmaccel
 				}
 
 				set_keyboard_state( ks );
-				msg.wParam = 0;
 			}
 			else if( msg.message == WM_KEYUP || msg.message == WM_SYSKEYUP ) {
 				if( dialog_ ) {
