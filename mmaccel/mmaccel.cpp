@@ -5,12 +5,14 @@
 #include "winapi/message_box.hpp"
 #include "winapi/string.hpp"
 #include "winapi/pipe.hpp"
+#include "winapi/path.hpp"
 #include "path.hpp"
 #include "file_monitor.hpp"
 #include "resource.h"
 #include "key_map.hpp"
 #include "gui/menu.hpp"
 #include "gui/version.hpp"
+#include "v120_to_v150.hpp"
 #include <atomic>
 #include <sstream>
 #include <memory>
@@ -86,6 +88,12 @@ namespace mmaccel
 		void start()
 		{
 			try {
+				mmaccel_txt_to_key_map_txt(
+					winapi::get_module_path() + u8"\\mmaccel.txt",
+					winapi::get_module_path() + u8"\\mmaccel\\key_map.txt",
+					mmd_map::load( winapi::get_module_path() + u8"\\mmaccel\\mmd_map.json" )
+				);
+
 				auto const wnds = winapi::get_window_from_process_id( winapi::get_current_process_id() );
 				for( HWND w : wnds ) {
 					if( winapi::get_class_name( w ) == u8"Polygon Movie Maker" ) {
@@ -255,7 +263,7 @@ namespace mmaccel
 			
 			auto const mm = mmd_map::load( winapi::get_module_path() + u8"\\mmaccel\\mmd_map.json" );
 			auto const key_map_path = winapi::get_module_path() + u8"\\mmaccel\\key_map.txt";
-			if( !PathFileExistsW( winapi::multibyte_to_widechar( key_map_path, CP_UTF8 ).c_str() ) ) {
+			if( !winapi::path_file_exists( key_map_path ) ) {
 				save_key_map( key_map_path, {}, mm );
 			}
 		

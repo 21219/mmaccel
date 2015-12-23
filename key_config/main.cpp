@@ -3,6 +3,7 @@
 #include <mmaccel/winapi/dialog.hpp>
 #include <mmaccel/winapi/string.hpp>
 #include <mmaccel/winapi/command_line.hpp>
+#include <mmaccel/v120_to_v150.hpp>
 #include <clocale>
 #include <locale>
 #include <sstream>
@@ -32,6 +33,17 @@ void write_key_config_window( HANDLE hwrite, HWND wnd )
 	}
 }
 
+void take_over()
+{
+	auto const path = winapi::get_module_path();
+
+	mmaccel::mmaccel_txt_to_key_map_txt(
+		path.substr( 0, path.rfind( u8"\\" ) ) + u8"\\mmaccel.txt",
+		winapi::get_module_path() + u8"\\key_map.txt",
+		mmaccel::mmd_map::load( winapi::get_module_path() + u8"\\mmd_map.json" )
+	);
+}
+
 int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 {
 	try {
@@ -43,6 +55,8 @@ int WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 		std::locale::global( std::locale( "ja-JP" ) );
 		std::setlocale( LC_ALL, "ja-JP" );
+
+		take_over();
 
 		STARTUPINFOW si;
 		GetStartupInfoW( &si );

@@ -97,6 +97,10 @@
     <ClInclude Include="winapi\icon.hpp">
       <Filter>winapi</Filter>
     </ClInclude>
+    <ClInclude Include="v120_to_v150.hpp" />
+    <ClInclude Include="winapi\path.hpp">
+      <Filter>winapi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="winapi">
