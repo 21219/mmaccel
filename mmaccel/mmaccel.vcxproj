@@ -155,7 +155,11 @@ copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"
 copy "$(ProjectDir)mmd_map.json" "$(SolutionDir)test\MikuMikuDance_v926\mmaccel\mmd_map.json"
-copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
+copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"
+
+copy "$(TargetPath)" "$(SolutionDir)Package\MMAccel_32\mmaccel\$(TargetFileName)"
+copy "$(ProjectDir)mmd_map.json" "$(SolutionDir)Package\MMAccel_32\mmaccel\mmd_map.json"
+copy "$(SolutionDir)\mmaccel_readme.txt" "$(SolutionDir)Package\MMAccel_32"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -180,7 +184,11 @@ copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"
 copy "$(ProjectDir)mmd_map.json" "$(SolutionDir)test\MikuMikuDance_v926x64\mmaccel\mmd_map.json"
-copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"</Command>
+copy "$(ProjectDir)mmd_map.json" "$(TargetDir)mmd_map.json"
+
+copy "$(TargetPath)" "$(SolutionDir)Package\MMAccel_64\mmaccel\$(TargetFileName)"
+copy "$(ProjectDir)mmd_map.json" "$(SolutionDir)Package\MMAccel_64\mmaccel\mmd_map.json"
+copy "$(SolutionDir)\mmaccel_readme.txt" "$(SolutionDir)Package\MMAccel_64"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

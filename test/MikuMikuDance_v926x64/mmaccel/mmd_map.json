@@ -16,9 +16,11 @@
             "KeyReversePaste": [ "反転ペースト", "button", "1a6" ],
             "VerticalSelect": [ "縦選択", "button", "1a0" ],
             "KeyDelete": [ "削除", "button", "1a7" ],
-            "FrameSelectBeginFocus": [ "範囲選択ボーンドロップダウン前項目", "combo_prev", "1b2" ],
-            "FrameSelectEndFocus": [ "範囲選択ボーンドロップダウン次項目", "combo_next", "1b2" ],
-            "KeyRangeBeginFocus": [ "範囲選択", "button", "19f" ],
+            "FrameSelectorPrev": [ "範囲選択ボーンドロップダウン前項目", "combo_prev", "1b2" ],
+            "FrameSelectorNext": [ "範囲選択ボーンドロップダウン次項目", "combo_next", "1b2" ],
+            "KeyRangeBeginFocus": [ "範囲選択開始フレーム入力", "edit", "1a9" ],
+            "KeyRangeEndFocus": [ "範囲選択終了フレーム入力", "edit", "1aa" ],
+            "KeyRangeSelect": [ "範囲選択", "button", "19f" ],
             "FrameScaling": [ "拡大縮小", "button", "1a8" ],
             "BonePrev": [ "ボーン前移動", "key", "26" ],
             "BoneNext": [ "ボーン次移動", "key", "28" ],
@@ -58,7 +60,7 @@
         },
         "再生": {
             "Play": [ "再生", "button", "198" ],
-            "PlayRepeat": [ "くり返し", "button", "19b" ],
+            "Repeat": [ "くり返し", "button", "19b" ],
             "PlayStartFrameFocus": [ "開始フレーム入力", "button", "199" ],
             "PlayStopFrameFocus": [ "終了フレーム入力", "button", "19a" ],
             "PlayStartFrame": [ "フレ・スタート", "button", "19e" ],
@@ -87,7 +89,7 @@
             "MainAngleZFocus": [ "角度Z入力", "edit", "225" ],
             "MainDistance": [ "距離初期化", "button", "21f" ],
             "MainDistanceFocus": [ "距離入力", "edit", "226" ],
-            "MainChangeSpace": [ "local/global(/accesory)切り替え", "key", "4c" ]
+            "ChangeSpace": [ "local/global(/accesory)切り替え", "key", "4c" ]
         },
         "その他": {
             "KillFocus": [ "キーボード入力解除", "kill_focus" ],
@@ -125,7 +127,7 @@
             "SelfShadowMode2": [ "モード2", "button", "234" ],
             "SelfShadowRangeFocus": [ "影範囲入力", "edit", "231" ],
             "SelfShadowRegister": [ "登録", "button", "235" ],
-            "SelfShadowChange": [ "モード切り替え", "mode_change_ss" ]
+            "SelfShadowModeChange": [ "モード切り替え", "mode_change_ss" ]
         },
         "アクセサリ": {
             "AccessoryFold": [ "折りたたみ", "fold", "1e8", "1e9" ],
@@ -167,11 +169,11 @@
         "表情": {
             "MorphFold": [ "折りたたみ", "fold", "210", "211" ],
             "MorphEyeFocus": [ "目モーフ入力", "edit", "1ff" ],
-            "MorphEyeSelectorRegister": [ "目モーフ登録", "button", "20c" ],
+            "MorphEyeRegister": [ "目モーフ登録", "button", "20c" ],
             "MorphEyeSelectorPrev": [ "目モーフドロップダウン前項目", "combo_prev", "1fd" ],
             "MorphEyeSelectorNext": [ "目モーフドロップダウン次項目", "combo_next", "1fd" ],
             "MorphLipFocus": [ "口モーフ入力", "edit", "204" ],
-            "MorphLipRegister": [ "口モーフ登録", "edit", "20f" ],
+            "MorphLipRegister": [ "口モーフ登録", "button", "20f" ],
             "MorphLipSelectorPrev": [ "口モーフドロップダウン前項目", "combo_prev", "202" ],
             "MorphLipSelectorNext": [ "口モーフドロップダウン次項目", "combo_next", "202" ],
             "MorphEyeblowFocus": [ "まゆモーフ入力", "edit", "1fa" ],
@@ -199,29 +201,30 @@
             "MenuFileLoadWAV": [ "WAVファイル読込", "menu", 0, 14 ],
             "MenuFileWAVWithFrame": [ "フレーム移動時WAVを鳴らす", "menu", 0, 15 ],
             "MenuFileMuteWAV": [ "WAVファイルを鳴らさない", "menu", 0, 16 ],
-            "MenuFileDefaultFolder": [ "デフォルトフォルダを前回の位置に", "menu", 0, 18 ],
+            "MenuFilePrevDefaultFolder": [ "デフォルトフォルダを前回の位置に", "menu", 0, 18 ],
             "MenuFileQuit": [ "終了", "menu", 0, 20 ]
         },
         "編集": {
             "MenuEditNumericInput": [ "ボーン・カメラ数値入力", "menu", 1, 0 ],
-            "MenuEditDeleteUnusedFrame": [ "不要フレーム削除", "menu", 1, 2 ],
-            "MenuEditCameraFrameAllSelect": [ "カメラフレームすべて選択", "menu", 1, 4 ],
-            "MenuEditLightingFrameAllSelect": [ "照明フレームすべて選択", "menu", 1, 5 ],
-            "MenuEditSelfShadowFrameAllSelect": [ "セルフ影フレームすべて選択", "menu", 1, 6 ],
-            "MenuEditGravityFrameAllSelect": [ "重力フレームすべて選択", "menu", 1, 7 ],
-            "MenuEditAccessoryFrameAllSelect": [ "アクセサリフレームすべて選択", "menu", 1, 8 ],
-            "MenuEditCorrectCamera": [ "カメラ位置角度補正", "menu", 1, 10 ],
-            "MenuEditBoneFrameAllSelect": [ "ボーンフレームすべて選択", "menu", 1, 12 ],
-            "MenuEditMorphFrameAllSelect": [ "表情フレームすべて選択", "menu", 1, 13 ],
-            "MenuEditShowIKOPFrameAllSelect": [ "表示・IK・外部親すべて選択", "menu", 1, 14 ],
-            "MenuEditAnotherFramePaste": [ "別フレームへペースト", "menu", 1, 16 ],
-            "MenuEditInsertEmptyFrame": [ "空フレーム挿入（ボーンorカメラ）", "menu", 1, 18 ],
-            "MenuEditDeleteVerticalFrames": [ "列フレーム削除（ボーンorカメラ）", "menu", 1, 19 ],
-            "MenuEditInsertEmptyFrameMorphOrLighting": [ "空フレーム挿入（表情or照明）", "menu", 1, 20 ],
-            "MenuEditDeleteVerticalFramesMorphOrLighting": [ "空フレーム削除（表情or照明）", "menu", 1, 21 ],
-            "MenuEditCorrectBone": [ "ボーン位置角度補正", "menu", 1, 23 ],
-            "MenuEditCorrectMorph": [ "表情大きさ補正", "menu", 1, 24 ],
-            "MenuEditCenterBias": [ "センター位置バイアス", "menu", 1, 26 ]
+            "MenuEditAngle0": [ "ボーン・カメラ角度0化", "menu", 1, 1 ],
+            "MenuEditDeleteUnusedFrame": [ "不要フレーム削除", "menu", 1, 3 ],
+            "MenuEditCameraFrameAllSelect": [ "カメラフレームすべて選択", "menu", 1, 5 ],
+            "MenuEditLightingFrameAllSelect": [ "照明フレームすべて選択", "menu", 1, 6 ],
+            "MenuEditSelfShadowFrameAllSelect": [ "セルフ影フレームすべて選択", "menu", 1, 7 ],
+            "MenuEditGravityFrameAllSelect": [ "重力フレームすべて選択", "menu", 1, 8 ],
+            "MenuEditAccessoryFrameAllSelect": [ "アクセサリフレームすべて選択", "menu", 1, 9 ],
+            "MenuEditCorrectCamera": [ "カメラ位置角度補正", "menu", 1, 11 ],
+            "MenuEditBoneFrameAllSelect": [ "ボーンフレームすべて選択", "menu", 1, 13 ],
+            "MenuEditMorphFrameAllSelect": [ "表情フレームすべて選択", "menu", 1, 14 ],
+            "MenuEditShowIKOPFrameAllSelect": [ "表示・IK・外部親すべて選択", "menu", 1, 15 ],
+            "MenuEditAnotherFramePaste": [ "別フレームへペースト", "menu", 1, 17 ],
+            "MenuEditInsertEmptyFrame": [ "空フレーム挿入（ボーンorカメラ）", "menu", 1, 19 ],
+            "MenuEditDeleteVerticalFrames": [ "列フレーム削除（ボーンorカメラ）", "menu", 1, 20 ],
+            "MenuEditInsertEmptyFrameMorphOrLighting": [ "空フレーム挿入（表情or照明）", "menu", 1, 21 ],
+            "MenuEditDeleteVerticalFramesMorphOrLighting": [ "空フレーム削除（表情or照明）", "menu", 1, 22 ],
+            "MenuEditCorrectBone": [ "ボーン位置角度補正", "menu", 1, 24 ],
+            "MenuEditCorrectMorph": [ "表情大きさ補正", "menu", 1, 25 ],
+            "MenuEditCenterBias": [ "センター位置バイアス", "menu", 1, 27 ]
         },
         "表示": {
             "MenuViewScreenSize": [ "出力サイズ", "menu", 2, 0 ],
@@ -262,11 +265,11 @@
             "MenuBackgroundCaptureOn3": [ "ON・モード3（背景AVI）", "menu", 3, 15 ]
         },
         "表情": {
-            "MenuMorphDeleteAll": [ "リップフレーム全て削除", "menu", 4, 0 ],
+            "MenuMorphDeleteAllLipKeys": [ "リップフレーム全て削除", "menu", 4, 0 ],
             "MenuMorphLipSync": [ "vsqによるリップシンク", "menu", 4, 1 ],
             "MenuMorphShiftLipFrame": [ "リップフレーム時間シフト", "menu", 4, 2 ],
             "MenuMorphDeleteAllEyeKeys": [ "目フレーム全て削除", "menu", 4, 4 ],
-            "MenuMorphRandoomBlink": [ "まばたきランダム登録", "menu", 4, 5 ],
+            "MenuMorphRandomBlink": [ "まばたきランダム登録", "menu", 4, 5 ],
             "MenuMorphDeleteAllEyeblowKeys": [ "まゆフレーム全て削除", "menu", 4, 7 ],
             "MenuMorphResetAllMorph": [ "全ての表情リセット", "menu", 4, 9 ],
             "MenuMorphRegisterAllMorphKeys": [ "全ての表情フレーム登録", "menu", 4, 11 ]
@@ -295,7 +298,7 @@
             "MenuMotionCapLoadONI": [ "oniファイル読込", "menu", 6, 8 ]
         },
         "ヘルプ": {
-            "MenuHelpSwitchLanguages": [ "English/Japanese", "menu", 7, 0 ],
+            "MenuHelpSwitchLanguage": [ "English/Japanese", "menu", 7, 0 ],
             "MenuHelpReloadTexture": [ "テクスチャ読直し", "menu", 7, 4 ],
             "MenuHelpAbout": [ "バージョン情報", "menu", 7, 6 ]
         }

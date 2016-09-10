@@ -146,7 +146,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)mmaccel\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)\test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)\test\MikuMikuDance_v926\mmaccel\$(TargetFileName)"
+
+copy "$(TargetPath)" "$(SolutionDir)Package\MMAccel_32\mmaccel\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -170,7 +172,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)mmaccel\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)\test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)\test\MikuMikuDance_v926x64\mmaccel\$(TargetFileName)"
+
+copy "$(TargetPath)" "$(SolutionDir)Package\MMAccel_64\mmaccel\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

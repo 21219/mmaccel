@@ -158,7 +158,9 @@
       </Command>
     </CustomBuildStep>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926\$(TargetFileName)"
+
+copy "$(TargetPath)" "$(SolutionDir)Package\MMAccel_32\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -186,7 +188,9 @@
       </Command>
     </CustomBuildStep>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\$(TargetFileName)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)test\MikuMikuDance_v926x64\$(TargetFileName)"
+
+copy "$(TargetPath)" "$(SolutionDir)Package\MMAccel_64\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
