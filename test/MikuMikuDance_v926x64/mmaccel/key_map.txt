@@ -13,9 +13,9 @@ FramePrev =
 # 現在フレーム入力
 CurrentFrameFocus = 
 # 1フレーム次
-FrameNext = ctrl + a
+FrameNext = a + b
 # 次のキーフレーム
-FrameKeyNext = 
+FrameKeyNext = ctrl + i
 # フレームの最後尾
 FrameLast = 
 # 現フレームボタン
@@ -23,7 +23,7 @@ JumpCurrentFrame =
 # コピー
 KeyCopy = 
 # ペースト
-KeyPaste = 
+KeyPaste = ctrl + v
 # 反転ペースト
 KeyReversePaste = 
 # 縦選択

@@ -264,7 +264,6 @@ namespace mmaccel
 
 		table_type states_;
 
-		keyboard_state() = default;
 		keyboard_state( keyboard_state const& ) = delete;
 		keyboard_state& operator=( keyboard_state const& ) = delete;
 
@@ -275,6 +274,11 @@ namespace mmaccel
 	public:
 		using size_type = table_type::size_type;
 		using const_iterator = table_type::const_iterator;
+
+		keyboard_state()
+		{
+			clear();
+		}
 
 		keyboard_state( keyboard_state&& ) = default;
 		keyboard_state& operator=( keyboard_state&& ) = default;
@@ -387,8 +391,6 @@ namespace std
 
 		result_type operator()( mmaccel::keys_combination const& kc ) const
 		{
-			hash< typename mmaccel::keys_combination::value_type > f;
-
 			result_type result = 0;
 			for( auto i : kc ) {
 				boost::hash_combine( result, i );

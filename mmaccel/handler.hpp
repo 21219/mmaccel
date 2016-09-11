@@ -142,7 +142,7 @@ namespace mmaccel
 		else if( f_type == u8"key" ) {
 			keys_combination kc;
 			auto const a = boost::get< json::array_type >( elem.second );
-			for( int i = 2; i < a.size(); ++i ) {
+			for( std::size_t i = 2; i < a.size(); ++i ) {
 				kc.push_back( std::strtol( boost::get< std::string >( a[i] ).c_str(), nullptr, 16 ) );
 			}
 

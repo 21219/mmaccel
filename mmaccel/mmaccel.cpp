@@ -51,6 +51,13 @@ namespace mmaccel
 		}
 	};
 
+	void output_debug_string(std::string const& str)
+	{
+#ifdef _DEBUG
+		OutputDebugStringW( winapi::multibyte_to_widechar( str, CP_UTF8 ).c_str() );
+#endif
+	}
+
 	class module_impl
 	{
 		HWND mmd_;
@@ -65,6 +72,8 @@ namespace mmaccel
 
 		winapi::hook_handle hook_cwp_;
 		winapi::hook_handle hook_gm_;
+
+		std::vector< std::pair< keys_combination, keys_combination > > down_keys_;
 
 		HWND key_config_;
 
@@ -179,30 +188,32 @@ namespace mmaccel
 			if( msg.message == WM_KEYDOWN || msg.message == WM_SYSKEYDOWN ) {
 				if( dialog_ ) {
 					return;					
-
 				}
 				
 				auto ks = get_keyboard_state();
 				auto kc = state_to_combination( ks );
-
+				
 				if( GetFocus() != nullptr ) {
 					if( kill_focus( ks, kc ) ) {
 						return;
 					}
 				}
-#ifdef _DEBUG
-				OutputDebugStringW( winapi::multibyte_to_widechar( keys_to_string( kc ) + u8" : ", CP_UTF8 ).c_str() );
-#endif
-				for( auto const& i : kc ) {
-					if( !( GetAsyncKeyState( i ) & 0x8000 ) ) {
-						ks[i] = false;
+
+				output_debug_string( keys_to_string( kc ) + u8" : " );
+
+				for( auto const& i : down_keys_ ) {
+					for( auto const& c : i.second ) {
+						ks[c] = false;
+					}
+					for( auto const& c : i.first ) {
+						ks[c] = true;
 					}
 				}
+
 				kc = state_to_combination( ks );
 
-#ifdef _DEBUG
-				OutputDebugStringW( winapi::multibyte_to_widechar( keys_to_string( kc ) + u8"\n", CP_UTF8 ).c_str() );
-#endif
+				output_debug_string( keys_to_string( kc ) + u8"\n" );
+
 				auto const rng = khm_.equal_range( kc );
 				if( rng.first == khm_.end() ) {
 					return;
@@ -210,10 +221,24 @@ namespace mmaccel
 
 				for( auto const i : kc ) {
 					ks[i] = false;
+					if( msg.wParam == i ) {
+						msg.wParam = 0;
+					}
 				}
 
 				for( auto const& handler : boost::make_iterator_range( rng ) ) {
+					keyboard_state tmp_ks;
+
 					handler.second.func( ks );
+					handler.second.func( tmp_ks );
+
+					auto const tmp_kc = state_to_combination( tmp_ks );
+
+					if( boost::find_if( down_keys_, [&tmp_kc](auto const& p) { return p.second == tmp_kc; } ) == down_keys_.end() ) {
+						down_keys_.push_back( std::make_pair( kc, tmp_kc ) );
+						
+						output_debug_string( u8"push down -> (" + keys_to_string( kc ) + ", " + keys_to_string( tmp_kc ) + u8")\n" );
+					}
 				}
 
 				set_keyboard_state( ks );
@@ -223,9 +248,29 @@ namespace mmaccel
 					return;
 				}
 
-				auto keys = get_keyboard_state();
-				keys.clear();
-				set_keyboard_state( keys );
+				auto ks = get_keyboard_state();
+
+				for( auto i = down_keys_.begin(); i != down_keys_.end(); ) {
+					auto itr =  boost::find( i->first, msg.wParam );
+					if( itr != i->first.end() ) {
+						for( auto c : i->second ) {
+							ks[c] = false;
+						}
+						for( auto c : i->first ) {
+							ks[c] = true;
+						}
+						ks[msg.wParam] = false;
+
+						output_debug_string( u8"still down -> " + keys_to_string( state_to_combination( ks ) ) + u8"\n" );
+
+						i = down_keys_.erase( i );
+					}
+					else {
+						++i;
+					}
+				}
+
+				set_keyboard_state( ks );
 			}
 			else if( msg.message == WM_COMMAND ) {
 				menu_.on_command( msg.wParam );
