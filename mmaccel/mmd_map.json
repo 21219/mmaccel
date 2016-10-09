@@ -59,7 +59,7 @@
             "ViewCenterBone": [ "ボーン", "button", "213" ]
         },
         "再生": {
-            "Play": [ "再生", "button", "198" ],
+            "Play": [ "再生", "key", "50" ],
             "Repeat": [ "くり返し", "button", "19b" ],
             "PlayStartFrameFocus": [ "開始フレーム入力", "button", "199" ],
             "PlayStopFrameFocus": [ "終了フレーム入力", "button", "19a" ],

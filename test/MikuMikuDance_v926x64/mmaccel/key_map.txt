@@ -89,7 +89,7 @@ ModelRegister =
 
 ### 視点 ###
 # 正面
-ViewFront = 
+ViewFront = o
 # 背面
 ViewBack = 
 # 上面
@@ -109,7 +109,7 @@ ViewCenterBone =
 
 ### 再生 ###
 # 再生
-Play = 
+Play = space
 # くり返し
 Repeat = 
 # 開始フレーム入力
