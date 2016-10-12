@@ -89,7 +89,7 @@ namespace mmaccel
 
 	using key_handler_map_t = std::unordered_map< keys_combination, handler_t >;
 
-	inline key_handler_map_t load_key_handler_map( boost::string_ref path, json::data_type const& mm, HWND mmd )
+	inline key_handler_map_t load_key_handler_map( boost::string_ref path, json::data_type const& mm, HWND mmd, HWND sep )
 	{
 		namespace qi = boost::spirit::qi;
 
@@ -121,7 +121,7 @@ namespace mmaccel
 			}
 
 			auto const elem_itr = elems.find( name );
-			khm.emplace( string_to_keys( *keys_str ), make_handler( *elem_itr, mmd ) );
+			khm.emplace( string_to_keys( *keys_str ), make_handler( *elem_itr, mmd, sep ) );
 		}
 
 		return khm;

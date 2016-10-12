@@ -105,12 +105,18 @@ namespace mmaccel
 		{ }
 	};
 
-	inline handler_t make_handler(json::pair_type const& elem, HWND mmd)
+	inline handler_t make_handler(json::pair_type const& elem, HWND mmd, HWND sep)
 	{
 		auto const f_type = boost::get< std::string >( boost::get< json::array_type >( elem.second )[1] );
 
-		auto ctrl_handle = [mmd]( json::data_type const& val, int index ) {
-			return winapi::get_dlg_item( mmd, std::strtol( boost::get< std::string >( boost::get< json::array_type >( val )[index] ).c_str(), nullptr, 16 ) );
+		auto ctrl_handle = [mmd, sep]( json::data_type const& val, int index ) {
+
+			auto p = winapi::get_dlg_item( mmd, std::strtol( boost::get< std::string >( boost::get< json::array_type >( val )[index] ).c_str(), nullptr, 16 ) );
+			if( !p ) {
+				return winapi::get_dlg_item( sep, std::strtol( boost::get< std::string >( boost::get< json::array_type >( val )[index] ).c_str(), nullptr, 16 ) );
+			}
+
+			return p;
 		};
 
 		if( f_type == u8"button" ) {

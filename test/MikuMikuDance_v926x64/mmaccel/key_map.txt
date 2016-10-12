@@ -11,11 +11,11 @@ FrameKeyPrev =
 # 1フレーム前
 FramePrev = 
 # 現在フレーム入力
-CurrentFrameFocus = 
+CurrentFrameFocus = j
 # 1フレーム次
-FrameNext = a + b
+FrameNext = shift + s
 # 次のキーフレーム
-FrameKeyNext = ctrl + i
+FrameKeyNext = shift + right
 # フレームの最後尾
 FrameLast = 
 # 現フレームボタン
@@ -137,7 +137,7 @@ MainEco =
 # 座標軸
 MainAxis = 
 # モデル編/カメラ編
-MainChangeEditor = 
+MainChangeEditor = ctrl + w
 # 位置X初期化
 MainPosX = 
 # 位置Y初期化
@@ -171,7 +171,7 @@ ChangeSpace =
 
 ### その他 ###
 # キーボード入力解除
-KillFocus = 
+KillFocus = ctrl + e
 # 全て折りたたむ
 FoldAll = 
 # 全て展開

@@ -229,7 +229,6 @@ namespace mmaccel
 				for( auto const& handler : boost::make_iterator_range( rng ) ) {
 					keyboard_state tmp_ks;
 
-					handler.second.func( ks );
 					handler.second.func( tmp_ks );
 
 					auto const tmp_kc = state_to_combination( tmp_ks );
@@ -238,6 +237,10 @@ namespace mmaccel
 						down_keys_.push_back( std::make_pair( kc, tmp_kc ) );
 						
 						output_debug_string( u8"push down -> (" + keys_to_string( kc ) + ", " + keys_to_string( tmp_kc ) + u8")\n" );
+					}
+
+					for( auto const i : tmp_kc ) {
+						ks[i] = true;
 					}
 				}
 
@@ -312,7 +315,7 @@ namespace mmaccel
 				save_key_map( key_map_path, {}, mm );
 			}
 		
-			khm_ = load_key_handler_map( winapi::get_module_path() + u8"\\mmaccel\\key_map.txt", mm, mmd_ );
+			khm_ = load_key_handler_map( winapi::get_module_path() + u8"\\mmaccel\\key_map.txt", mm, mmd_, sep_ );
 
 			update_ = true;
 		}
