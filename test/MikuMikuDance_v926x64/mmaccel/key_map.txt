@@ -7,13 +7,13 @@ Redo =
 # フレームの先頭
 FrameHead = 
 # 前のキーフレーム
-FrameKeyPrev = 
+FrameKeyPrev = ctrl + a
 # 1フレーム前
-FramePrev = 
+FramePrev = a
 # 現在フレーム入力
-CurrentFrameFocus = j
+CurrentFrameFocus = k
 # 1フレーム次
-FrameNext = shift + s
+FrameNext = v
 # 次のキーフレーム
 FrameKeyNext = shift + right
 # フレームの最後尾
@@ -109,7 +109,7 @@ ViewCenterBone =
 
 ### 再生 ###
 # 再生
-Play = space
+Play = p
 # くり返し
 Repeat = 
 # 開始フレーム入力
@@ -355,11 +355,11 @@ MenuFileRenderAVI =
 # 画像ファイルに出力
 MenuFileRenderImage = 
 # ポーズ読込
-MenuFileLoadPose = 
+MenuFileLoadPose = shift + p
 # ポーズ保存
 MenuFileSavePose = 
 # モーション読込
-MenuFileLoadMotion = 
+MenuFileLoadMotion = shift + m
 # モーション保存
 MenuFileSaveMotion = 
 # WAVファイル読込

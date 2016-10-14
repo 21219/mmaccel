@@ -148,6 +148,8 @@ namespace mmaccel
 				}
 				else if( winapi::get_class_name( cwp.hwnd ) == u8"#32770" ) {
 					dialog_ = true;
+					down_keys_.clear();
+					set_keyboard_state( keyboard_state() );
 				}
 			}
 			else if( cwp.message == WM_DESTROY ) {
@@ -186,7 +188,10 @@ namespace mmaccel
 		void get_message_proc( MSG& msg )
 		{
 			if( msg.message == WM_KEYDOWN || msg.message == WM_SYSKEYDOWN ) {
+				output_debug_string( "[WM_KEYDOWN start]\n" );
+
 				if( dialog_ ) {
+					output_debug_string( "[WM_KEYDOWN end dialog]\n" );
 					return;					
 				}
 				
@@ -238,16 +243,18 @@ namespace mmaccel
 						
 						output_debug_string( u8"push down -> (" + keys_to_string( kc ) + ", " + keys_to_string( tmp_kc ) + u8")\n" );
 					}
-
 					for( auto const i : tmp_kc ) {
 						ks[i] = true;
 					}
 				}
 
 				set_keyboard_state( ks );
+				output_debug_string( "[WM_KEYDOWN end]\n" );
 			}
 			else if( msg.message == WM_KEYUP || msg.message == WM_SYSKEYUP ) {
+				output_debug_string( "[WM_KEYUP start]\n" );
 				if( dialog_ ) {
+					output_debug_string( "[WM_KEYUP end dialog]\n" );
 					return;
 				}
 
@@ -274,6 +281,8 @@ namespace mmaccel
 				}
 
 				set_keyboard_state( ks );
+
+				output_debug_string( "[WM_KEYUP end]\n" );
 			}
 			else if( msg.message == WM_COMMAND ) {
 				menu_.on_command( msg.wParam );

@@ -11,17 +11,17 @@ namespace mmaccel
 	inline void button( HWND ctrl )
 	{
 		if( IsWindowVisible( ctrl ) && IsWindowEnabled( ctrl ) ) {
-			SendMessageW( ctrl, BM_CLICK, 0, 0 );
+			PostMessageW( ctrl, BM_CLICK, 0, 0 );
 		}
 	}
 
 	inline void fold( HWND hide_ctrl, HWND show_ctrl )
 	{
 		if( IsWindowVisible( hide_ctrl ) ) {
-			SendMessageW( hide_ctrl, BM_CLICK, 0, 0 );
+			PostMessageW( hide_ctrl, BM_CLICK, 0, 0 );
 		}
 		else {
-			SendMessageW( show_ctrl, BM_CLICK, 0, 0 );
+			PostMessageW( show_ctrl, BM_CLICK, 0, 0 );
 		}
 	}
 
@@ -40,8 +40,8 @@ namespace mmaccel
 
 		auto const index = SendMessageW( ctrl, CB_GETCURSEL, 0, 0 );
 		if( index - 1 >= 0 ) {
-			SendMessageW( ctrl, CB_SETCURSEL, index - 1, 0 );
-			SendMessageW( GetParent( ctrl ), WM_COMMAND, MAKEWPARAM( winapi::get_dlg_ctrl_id( ctrl )->get(), CBN_SELCHANGE ), reinterpret_cast<LPARAM>( ctrl ) );
+			PostMessageW( ctrl, CB_SETCURSEL, index - 1, 0 );
+			PostMessageW( GetParent( ctrl ), WM_COMMAND, MAKEWPARAM( winapi::get_dlg_ctrl_id( ctrl )->get(), CBN_SELCHANGE ), reinterpret_cast<LPARAM>( ctrl ) );
 		}
 	}
 
@@ -54,8 +54,8 @@ namespace mmaccel
 		auto const index = SendMessageW( ctrl, CB_GETCURSEL, 0, 0 );
 		auto const sz = SendMessageW( ctrl, CB_GETCOUNT, 0, 0 );
 		if( index + 1 < sz ) {
-			SendMessageW( ctrl, CB_SETCURSEL, index + 1, 0 );
-			SendMessageW( GetParent( ctrl ), WM_COMMAND, MAKEWPARAM( winapi::get_dlg_ctrl_id( ctrl )->get(), CBN_SELCHANGE ), reinterpret_cast<LPARAM>( ctrl ) );
+			PostMessageW( ctrl, CB_SETCURSEL, index + 1, 0 );
+			PostMessageW( GetParent( ctrl ), WM_COMMAND, MAKEWPARAM( winapi::get_dlg_ctrl_id( ctrl )->get(), CBN_SELCHANGE ), reinterpret_cast<LPARAM>( ctrl ) );
 		}
 	}
 
@@ -69,6 +69,7 @@ namespace mmaccel
 	inline void menu( HWND mmd, int index, int sub_index )
 	{
 		auto const m = winapi::get_sub_menu( winapi::get_menu( mmd ), index );
+
 		if( !m ) {
 			return;
 		}
@@ -79,7 +80,7 @@ namespace mmaccel
 		}
 
 		if( !( *state & MFS_DISABLED ) ) {
-			SendMessageW( mmd, WM_COMMAND, MAKEWPARAM( GetMenuItemID( m.get(), sub_index ), 0 ), 0 );
+			PostMessageW( mmd, WM_COMMAND, MAKEWPARAM( GetMenuItemID( m.get(), sub_index ), 0 ), 0 );
 		}
 	}
 
