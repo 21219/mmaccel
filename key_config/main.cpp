@@ -35,10 +35,13 @@ void write_key_config_window( HANDLE hwrite, HWND wnd )
 
 void take_over()
 {
-	auto const path = winapi::get_module_path();
+	auto old_path = winapi::get_module_path();
+	if( !winapi::path_file_exists( old_path ) ) {
+		old_path = winapi::get_module_path().substr( 0, old_path.rfind( "\\" ) );
+	}
 
 	mmaccel::mmaccel_txt_to_key_map_txt(
-		path.substr( 0, path.rfind( u8"\\" ) ) + u8"\\mmaccel.txt",
+		old_path.substr( 0, old_path.rfind( u8"\\" ) ) + u8"\\mmaccel.txt",
 		winapi::get_module_path() + u8"\\key_map.txt",
 		mmaccel::mmd_map::load( winapi::get_module_path() + u8"\\mmd_map.json" )
 	);

@@ -54,7 +54,7 @@ void load_mmaccel_hook()
 		return;
 	}
 
-	hooks();
+	hooks( ( winapi::get_module_path() + "\\mmaccel" ).c_str() );
 }
 
 void load_mmaccel()
@@ -70,7 +70,7 @@ void load_mmaccel()
 		return;
 	}
 
-	start();
+	start( ( winapi::get_module_path() + "\\mmaccel" ).c_str() );
 }
 
 extern "C"

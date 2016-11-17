@@ -32,7 +32,18 @@ namespace mmaccel
 				winapi::message_box( u8"MMAccel", u8"メニューハンドルを取得できません", MB_OK | MB_ICONERROR );
 			}
 
-			if( src && !winapi::insert_menu( src, winapi::get_menu_item_count( src ), winapi::get_sub_menu( root_, 0 ), root_name ) ) {
+			int index = 0;
+			for(  ; index < winapi::get_menu_item_count( src ); ++index ) {
+				MENUITEMINFO info;
+				info.cbSize = sizeof( info );
+				info.fMask = MIIM_FTYPE;
+				GetMenuItemInfo( src.get(), index, TRUE, &info );
+				if( info.fType & MFT_RIGHTJUSTIFY ) {
+					break;
+				}
+			}
+
+			if( src && !winapi::insert_menu( src, index, winapi::get_sub_menu( root_, 0 ), root_name ) ) {
 				winapi::last_error_message_box( u8"MMAccel", u8"insert_menu error" );
 			}
 

@@ -10,9 +10,9 @@ namespace mmaccel
 	class version_dialog
 	{
 	public:
-		static void show( HWND parent ) noexcept
+		static void show( std::string const& path, HWND parent ) noexcept
 		{
-			winapi::modal_dialog_box( dll_path(), IDD_MMACCEL_VERSION, parent, proc );
+			winapi::modal_dialog_box( path, IDD_MMACCEL_VERSION, parent, proc );
 		}
 
 	private:

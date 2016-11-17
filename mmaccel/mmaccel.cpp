@@ -77,13 +77,15 @@ namespace mmaccel
 
 		HWND key_config_;
 
+		std::string path_;
+
 		module_impl():
 			dialog_( false ),
 			update_( false )
 		{}
 
 	public:	
-		void register_hooks()
+		void register_hooks(std::string const& )
 		{
 			HINSTANCE hinst = winapi::get_module_handle();
 			hook_cwp_ = winapi::set_windows_hook_ex( 
@@ -94,13 +96,15 @@ namespace mmaccel
 			);
 		}
 
-		void start()
+		void start(std::string const& path)
 		{
 			try {
+				path_ = path;
+
 				mmaccel_txt_to_key_map_txt(
 					winapi::get_module_path() + u8"\\mmaccel.txt",
-					winapi::get_module_path() + u8"\\mmaccel\\key_map.txt",
-					mmd_map::load( winapi::get_module_path() + u8"\\mmaccel\\mmd_map.json" )
+					path_ + "\\key_map.txt",
+					mmd_map::load( path_ + "\\mmd_map.json" )
 				);
 
 				auto const wnds = winapi::get_window_from_process_id( winapi::get_current_process_id() );
@@ -111,14 +115,14 @@ namespace mmaccel
 					}
 				}
 
-				menu_ = decltype( menu_ )( mmd_, dll_path(), u8"MMAccel" );
+				menu_ = decltype( menu_ )( mmd_, path_ + "\\mmaccel.dll", u8"MMAccel" );
 				menu_.assign_handler( menu_command< ID_MMACCEL_SETTING >(), [this] { this->run_key_config(); } );
-				menu_.assign_handler( menu_command< ID_MMACCEL_VERSION >(), [this] { version_dialog::show( this->mmd_ ); } );
+				menu_.assign_handler( menu_command< ID_MMACCEL_VERSION >(), [this] { version_dialog::show( path_ + "\\mmaccel.dll", this->mmd_ ); } );
 
-				fm_.start( winapi::get_module_path(), [this]( boost::string_ref name ) {
-					if( name == u8"mmaccel\\key_map.txt" ) {
+				fm_.start( path_, [this]( boost::string_ref name ) {
+					if( name == "key_map.txt" ) {
 						update_ = false;
-						PostMessageW( mmd_, WM_NULL, 0, 0 );
+						PostMessageW( mmd_, WM_APP, 0, 0 );
 
 						return true;
 					}
@@ -126,7 +130,7 @@ namespace mmaccel
 					return false;
 				} );
 				
-				PostMessageW( mmd_, WM_NULL, 0, 0 );
+				PostMessageW( mmd_, WM_APP, 0, 0 );
 			}
 			catch( std::exception const& e ) {
 				winapi::message_box( u8"MMAccel", e.what(), MB_OK | MB_ICONERROR );
@@ -287,7 +291,7 @@ namespace mmaccel
 			else if( msg.message == WM_COMMAND ) {
 				menu_.on_command( msg.wParam );
 			}
-			else if( msg.message == WM_NULL ) {
+			else if( msg.message == WM_APP ) {
 				update_key_map();
 			}
 		}
@@ -318,13 +322,13 @@ namespace mmaccel
 				return;
 			}
 			
-			auto const mm = mmd_map::load( winapi::get_module_path() + u8"\\mmaccel\\mmd_map.json" );
-			auto const key_map_path = winapi::get_module_path() + u8"\\mmaccel\\key_map.txt";
+			auto const mm = mmd_map::load( path_ + "\\mmd_map.json" );
+			auto const key_map_path = path_ + "\\key_map.txt";
 			if( !winapi::path_file_exists( key_map_path ) ) {
 				save_key_map( key_map_path, {}, mm );
 			}
 		
-			khm_ = load_key_handler_map( winapi::get_module_path() + u8"\\mmaccel\\key_map.txt", mm, mmd_, sep_ );
+			khm_ = load_key_handler_map( path_ + "\\key_map.txt", mm, mmd_, sep_ );
 
 			update_ = true;
 		}
@@ -373,8 +377,8 @@ namespace mmaccel
 			si.hStdInput = GetStdHandle( STD_INPUT_HANDLE );
 			si.hStdError = GetStdHandle( STD_ERROR_HANDLE );
 
-			auto const target_exe = winapi::multibyte_to_widechar( winapi::get_module_path() + u8"\\mmaccel\\key_config.exe", CP_UTF8 );
-			auto const current_dir = winapi::multibyte_to_widechar( winapi::get_module_path() + u8"\\mmaccel", CP_UTF8 );
+			auto const target_exe = winapi::multibyte_to_widechar( path_ + "\\key_config.exe", CP_UTF8 );
+			auto const current_dir = winapi::multibyte_to_widechar( path_, CP_UTF8 );
 			std::wstring args( L"--mmd" );
 			if( !CreateProcessW( target_exe.c_str(), &args[0], nullptr, nullptr, TRUE, NORMAL_PRIORITY_CLASS, nullptr, current_dir.c_str(), &si, &pi ) ) {
 				winapi::last_error_message_box( u8"MMAccel", u8"run_key_config CreateProcess error" );
@@ -396,14 +400,14 @@ namespace mmaccel
 
 extern "C"
 {
-	__declspec( dllexport ) void mmaccel_register_hooks()
+	__declspec( dllexport ) void mmaccel_register_hooks(char const* path)
 	{
-		mmaccel::module().register_hooks();
+		mmaccel::module().register_hooks( path );
 	}
 
-	__declspec( dllexport ) void mmaccel_start()
+	__declspec( dllexport ) void mmaccel_start(char const* path)
 	{
-		mmaccel::module().start();
+		mmaccel::module().start( path );
 	}
 
 } // extern "C"

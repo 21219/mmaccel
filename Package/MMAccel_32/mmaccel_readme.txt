@@ -50,6 +50,11 @@ v1.12以前のmmaccel.txtおよびmmaccel.dllはv1.50では使用しません。
 >>>
 >>> インストール
 >>>
+
+【注意】
+EffekseerForMMDを併用する場合はMMAccelのd3d9.dllをコピーしないでください。
+EffekseerForMMDを併用する場合のインストールは下記にあります。
+
 d3d9.dll、mmaccelフォルダをMikuMikuDance.exeと同じフォルダにコピーしてください。
 MMAccelのd3d9.dllでMMEのd3d9.dllを上書きしてもMMEを使用できます。
 
@@ -57,6 +62,16 @@ MMAccelのd3d9.dllでMMEのd3d9.dllを上書きしてもMMEを使用できます。
 
 また、「mmaccelフォルダ内のkey_map.txt」がない状態でMMDを立ち上げると、
 自動的に何も設定されていない状態の「mmaccelフォルダ内にkey_map.txt」が作られます。
+
+>>>
+>>> インストール（EffekseerForMMDと併用する場合）
+>>>
+mmaccelフォルダだけをpluginフォルダにコピーしてください。
+
+インストールが成功すれば、MMDにMMAccelというメニューが現れます。
+
+また、「mmaccelフォルダ内のkey_map.txt」がない状態でMMDを立ち上げると、
+自動的に何も設定されていない状態の「mmaccelフォルダ内にkey_map.txt」が作られます
 
 ----------------------------------------
 
@@ -123,6 +138,9 @@ MMEについてご教示くださいました舞力介入Pに御礼申し上げます。
 テストに付き合ってくれたぐたさんに御礼申し上げます。
 
 ----------------------------------------
+
+2016/11/17 v1.59
+EffekseerForMMDのpluginフォルダに入れて動作できるように修正。
 
 2016/10/12 v1.58
 割り当てたショートカットで別のウィンドウが開けるとshiftやctrl等がロックされる現象の修正。
