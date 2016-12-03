@@ -212,6 +212,5 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
-/mmaccel_for_mmdplugin/MMDPlugin/mmd_plugin.h
-/mmaccel_for_mmdplugin/MMDPlugin/mmd_plugin.lib
-/mmaccel_for_mmdplugin/MMDPlugin/LICENSE
+mmaccel_for_mmdplugin/MMDPlugin/
+

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MMDPlugin">
+      <UniqueIdentifier>{b5e016c0-eaa3-4b8e-b3db-b3f8794fd563}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MMDPlugin\mmd_plugin.h">
+      <Filter>MMDPlugin</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
